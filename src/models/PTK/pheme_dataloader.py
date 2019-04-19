@@ -39,7 +39,7 @@ def recursive_struc(structure_tree, tweet_dir, source, source_id, source_time, t
 
         if type(value) is dict:
             # print(key, value)
-            process_tweet(tweet_dir, key, source, source_time, source_id, tree)
+            source_time = process_tweet(tweet_dir, key, source, source_time, source_id, tree)
 
             source_id_2 = key
             recursive_struc(value, tweet_dir, False, source_id_2, source_time, tree)
@@ -61,6 +61,8 @@ def process_tweet(tweet_dir, key, source, source_time, source_id, tree):
             tree.create_node(key, key, parent=source_id, data=tweet_obj)
     except FileNotFoundError as fnf_error:
         print(fnf_error)
+
+    return source_time
 
 def parse_tweet(file_path, is_source, source_time):
     with open(file_path) as file:
@@ -93,4 +95,5 @@ def text_process(s):
 
 
 if __name__ == '__main__':
+    #test
     read_topic_dir('/data/rumor_detection/data/pheme/pheme_v2_extend/all-rnr-annotated-threads/charliehebdo-all-rnr-threads/rumours', True)

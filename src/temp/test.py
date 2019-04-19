@@ -28,6 +28,6 @@ tree.show()
 
 sub_tree = tree.subtree("diane")
 sub_tree.show()
-print(tree.all_nodes())
+print(tree.children('harry'))
 
 

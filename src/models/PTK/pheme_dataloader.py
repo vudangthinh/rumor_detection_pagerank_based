@@ -16,11 +16,13 @@ def read_data(data_path):
         if isdir(topic_dir):
             rumor_dir = join(topic_dir, 'rumours')
             non_rumor_dir = join(topic_dir, 'non-rumours')
+
             read_topic_dir(rumor_dir, True)
             read_topic_dir(non_rumor_dir, False)
 
 
 def read_topic_dir(topic_dir, is_rumor):
+    tree_list = []
     for f in listdir(topic_dir):
         tweet_dir = join(topic_dir, f)
         if isdir(tweet_dir):
@@ -30,7 +32,14 @@ def read_topic_dir(topic_dir, is_rumor):
             with open(structure_file) as json_f:
                 structure_tree = json.load(json_f)
                 recursive_struc(structure_tree, tweet_dir, True, f, -1, tree)
-                tree.show()
+
+                for node in tree.all_nodes_itr():
+                    print(node)
+
+
+                tree_list.append(tree)
+
+    return tree_list
 
 def recursive_struc(structure_tree, tweet_dir, source, source_id, source_time, tree):
     for key, value in structure_tree.items():

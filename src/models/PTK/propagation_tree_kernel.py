@@ -1,7 +1,7 @@
 import numpy as np
 from treelib import Node, Tree
 
-def node_similarity(node1, node2, alpha=0.5):
+def node_similarity(node1, node2, alpha=0):
     u1, c1, t1 = node1.data.user, node1.data.content, node1.data.time_dif
     u2, c2, t2 = node2.data.user, node2.data.content, node2.data.time_dif
 
@@ -14,12 +14,12 @@ def most_similarity_nodes(T1, T2):
     node_pairs = {}
 
     for node1 in T1.all_nodes_itr():
-        smallest_dist = -1
+        highest_simil = -1
         similar_node = Node()
         for node2 in T2.all_nodes_itr():
             node_simil = node_similarity(node1, node2)
-            if smallest_dist < 0 or smallest_dist > node_simil:
-                smallest_dist = node_simil
+            if highest_simil < node_simil:
+                highest_simil = node_simil
                 similar_node = node2
 
         node_pairs[node1] = similar_node

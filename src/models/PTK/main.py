@@ -17,11 +17,10 @@ def shuffle_data(tree_list, y):
     return new_tree_list, new_y
 
 if __name__ == '__main__':
-    tree_list, y = load_data('/Users/thinhvu/Documents/projects/6392078/all-rnr-annotated-threads')
+    tree_list, y = load_data('/data/rumor_detection/data/pheme/pheme_v2_extend/all-rnr-annotated-threads/temp')
     # tree_list, y = shuffle_data(tree_list, y)
     X_train, X_test, y_train, y_test = train_test_split(tree_list, y, test_size=0.3, random_state=0)
-    # print(len(tree_list))
-    # print('y', y)
+    print("Data size:", len(tree_list))
 
     clf = SVC(kernel='precomputed')
     gram_train = propagation_tree_kernel_function(X_train, X_train)

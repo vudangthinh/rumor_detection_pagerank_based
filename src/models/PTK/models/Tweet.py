@@ -6,3 +6,4 @@ class Tweet(object):
         self.content = content
         self.time_dif = time_dif
         self.is_source = is_source
+

@@ -6,7 +6,7 @@ def node_similarity(node1, node2, alpha=0.5):
     u2, c2, t2 = node2.data.user, node2.data.content, node2.data.time_dif
 
     t = abs(t1 - t2)
-    user_similarity = np.linalg.norm(u1 - u2)
+    user_similarity = 1 - np.linalg.norm(u1 - u2)
     content_similarity = len(set.intersection(c1, c2)) / len(set.union(c1, c2))
     return np.exp(-t) * (alpha * user_similarity + (1 - alpha) * content_similarity)
 
@@ -28,7 +28,7 @@ def most_similarity_nodes(T1, T2):
 
 def sub_tree_similarity(subtree1, subtree2):
     root_similar = node_similarity(subtree1.get_node(subtree1.root), subtree2.get_node(subtree2.root))
-    if subtree1.depth() == 0 and subtree2.depth() == 0:
+    if subtree1.depth() == 0 or subtree2.depth() == 0:
         return root_similar
     else:
         children1 = subtree1.children(subtree1.root)
@@ -73,4 +73,5 @@ def propagation_tree_kernel_function(tree_list1, tree_list2):
         for j, tree2 in enumerate(tree_list2):
             similar_matrix[i, j] = tree_similarity(tree1, tree2)
 
+    print(similar_matrix)
     return similar_matrix

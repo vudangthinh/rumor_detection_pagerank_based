@@ -19,16 +19,17 @@ def load_data(data_path):
             rumor_dir = join(topic_dir, 'rumours')
             non_rumor_dir = join(topic_dir, 'non-rumours')
 
-            rumor_tree_list = read_topic_dir(rumor_dir, True)
+            rumor_tree_list = read_topic_dir(rumor_dir)
             tree_list.extend(rumor_tree_list)
             y.extend([1 for i in range(len(rumor_tree_list))])
-            non_rumor_tree_list = read_topic_dir(non_rumor_dir, False)
+
+            non_rumor_tree_list = read_topic_dir(non_rumor_dir)
             tree_list.extend(non_rumor_tree_list)
             y.extend([0 for i in range(len(non_rumor_tree_list))])
 
     return (tree_list, y)
 
-def read_topic_dir(topic_dir, is_rumor):
+def read_topic_dir(topic_dir):
     tree_list = []
     for f in listdir(topic_dir):
         tweet_dir = join(topic_dir, f)
@@ -100,12 +101,16 @@ def parse_tweet(file_path, is_source, source_time):
 
 def text_process(s):
     s = s.lower()
-    s = re.sub(r'[^a-zA-Z0-9\s]', ' ', s)
+    # s = re.sub(r'[^a-zA-Z0-9\s]', ' ', s)
     tokens = [token for token in s.split(" ") if token != ""]
-    n_grams = set.union(set(ngrams(tokens, 1)), set(ngrams(tokens, 2)))
+    # n_grams = set.union(set(ngrams(tokens, 1)), set(ngrams(tokens, 2)))
+    n_grams = set(ngrams(tokens, 1))
     return n_grams
 
 
 if __name__ == '__main__':
     #test
-    read_topic_dir('/data/rumor_detection/data/pheme/pheme_v2_extend/all-rnr-annotated-threads/charliehebdo-all-rnr-threads/rumours', True)
+    tree_list = read_topic_dir('/Users/thinhvu/Documents/projects/6392078/all-rnr-annotated-threads/gurlitt-all-rnr-threads/rumours')
+    for tree in tree_list:
+        tree.show()
+        tree.show(data_property='user')

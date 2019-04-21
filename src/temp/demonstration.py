@@ -26,8 +26,11 @@ tree.create_node("Mary", "mary", parent="diane")
 tree.create_node("Mark", "mark", parent="jane")
 tree.show()
 
-sub_tree = tree.subtree("diane")
+sub_tree = tree.subtree("mark")
 sub_tree.show()
-print(tree.children('harry'))
+print(len(tree.children(tree.root)))
+
+
+
 
 

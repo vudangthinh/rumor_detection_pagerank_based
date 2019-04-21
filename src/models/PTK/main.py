@@ -3,6 +3,7 @@ from src.models.PTK.propagation_tree_kernel import propagation_tree_kernel_funct
 from src.models.PTK.pheme_dataloader import load_data
 from sklearn.metrics import accuracy_score
 from random import shuffle
+from sklearn.model_selection import train_test_split
 
 def shuffle_data(tree_list, y):
     index = [i for i in range(len(tree_list))]
@@ -17,14 +18,16 @@ def shuffle_data(tree_list, y):
 
 if __name__ == '__main__':
     tree_list, y = load_data('/Users/thinhvu/Documents/projects/6392078/all-rnr-annotated-threads')
-    tree_list, y = shuffle_data(tree_list, y)
+    # tree_list, y = shuffle_data(tree_list, y)
+    X_train, X_test, y_train, y_test = train_test_split(tree_list, y, test_size=0.3, random_state=0)
     print(len(tree_list))
-    print(len(y))
     print('y', y)
-    clf = SVC(kernel='precomputed')
-    gram = propagation_tree_kernel_function(tree_list, tree_list)
-    clf.fit(gram, y)
 
-    y_pred = clf.predict(gram)
+    clf = SVC(kernel='precomputed')
+    gram_train = propagation_tree_kernel_function(X_train, X_train)
+    clf.fit(gram_train, y_train)
+
+    gram_test = propagation_tree_kernel_function(X_test, X_train)
+    y_pred = clf.predict(gram_test)
     print('y_pred', y_pred)
-    print('accuracy', accuracy_score(y, y_pred))
+    print('accuracy', accuracy_score(y_test, y_pred))

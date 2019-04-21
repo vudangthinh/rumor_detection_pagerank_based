@@ -9,7 +9,9 @@ import numpy as np
 import re
 from nltk.util import ngrams
 
-def read_data(data_path):
+def load_data(data_path):
+    tree_list = []
+    y = []
 
     for f in listdir(data_path):
         topic_dir = join(data_path, f)
@@ -17,9 +19,14 @@ def read_data(data_path):
             rumor_dir = join(topic_dir, 'rumours')
             non_rumor_dir = join(topic_dir, 'non-rumours')
 
-            read_topic_dir(rumor_dir, True)
-            read_topic_dir(non_rumor_dir, False)
+            rumor_tree_list = read_topic_dir(rumor_dir, True)
+            tree_list.extend(rumor_tree_list)
+            y.extend([1 for i in range(len(rumor_tree_list))])
+            non_rumor_tree_list = read_topic_dir(non_rumor_dir, False)
+            tree_list.extend(non_rumor_tree_list)
+            y.extend([0 for i in range(len(non_rumor_tree_list))])
 
+    return (tree_list, y)
 
 def read_topic_dir(topic_dir, is_rumor):
     tree_list = []
@@ -32,10 +39,6 @@ def read_topic_dir(topic_dir, is_rumor):
             with open(structure_file) as json_f:
                 structure_tree = json.load(json_f)
                 recursive_struc(structure_tree, tweet_dir, True, f, -1, tree)
-
-                for node in tree.all_nodes_itr():
-                    print(node)
-
 
                 tree_list.append(tree)
 

@@ -1,3 +1,7 @@
 https://scikit-learn.org/stable/auto_examples/svm/plot_custom_kernel.html
 https://stackoverflow.com/questions/26962159/how-to-use-a-custom-svm-kernel
 https://scikit-learn.org/stable/modules/svm.html#custom-kernels
+
+Text Pre-Processing
+https://github.com/NIHOPA/NLPre
+https://github.com/fmpr/texttk

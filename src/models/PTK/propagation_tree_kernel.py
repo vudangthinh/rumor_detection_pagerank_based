@@ -26,7 +26,7 @@ def most_similarity_nodes(T1, T2):
 
     return node_pairs
 
-def sub_tree_similarity(subtree1, subtree2):
+def sub_tree_similarity(subtree1, subtree2, subtree_similarity_dict):
     root_similar = node_similarity(subtree1.get_node(subtree1.root), subtree2.get_node(subtree2.root))
     if subtree1.depth() == 0 or subtree2.depth() == 0:
         return root_similar
@@ -40,31 +40,35 @@ def sub_tree_similarity(subtree1, subtree2):
         for i in range(nc_min):
             child1 = children1[i]
             child2 = children2[i]
-            child_tree1 = subtree1.subtree(child1.identifier)
-            child_tree2 = subtree2.subtree(child2.identifier)
+            if (child1.identifier, child2.identifier) in subtree_similarity_dict:
+                child_similar = subtree_similarity_dict[(child1.identifier, child2.identifier)]
+            else:
+                child_tree1 = subtree1.subtree(child1.identifier)
+                child_tree2 = subtree2.subtree(child2.identifier)
 
-            child_similar = sub_tree_similarity(child_tree1, child_tree2)
+                child_similar = sub_tree_similarity(child_tree1, child_tree2, subtree_similarity_dict)
+
+                subtree_similarity_dict[(child1.identifier, child2.identifier)] = child_similar
             multiplication *= (1 + child_similar)
 
         return root_similar * multiplication
 
-
 def tree_similarity(T1, T2):
+    subtree_similarity_dict = {}
     node_pairs_1 = most_similarity_nodes(T1, T2)
 
-    tree_simil = 0
     for node1, node2 in node_pairs_1.items():
         subtree1 = T1.subtree(node1.identifier)
         subtree2 = T2.subtree(node2.identifier)
-        tree_simil += sub_tree_similarity(subtree1, subtree2)
+        tree_simil_1 = sub_tree_similarity(subtree1, subtree2, subtree_similarity_dict)
 
     node_pairs_2 = most_similarity_nodes(T2, T1)
     for node2, node1 in node_pairs_2.items():
         subtree1 = T1.subtree(node1.identifier)
         subtree2 = T2.subtree(node2.identifier)
-        tree_simil += sub_tree_similarity(subtree1, subtree2)
+        tree_simil_2 = sub_tree_similarity(subtree1, subtree2, subtree_similarity_dict)
 
-    return tree_simil
+    return tree_simil_1 + tree_simil_2
 
 def propagation_tree_kernel_function(tree_list1, tree_list2):
     similar_matrix = np.zeros((len(tree_list1), len(tree_list2)))

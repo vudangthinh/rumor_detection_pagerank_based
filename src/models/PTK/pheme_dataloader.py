@@ -5,6 +5,7 @@ import json
 from treelib import Node, Tree
 from src.models.PTK.utils import date_time_utils
 from src.models.PTK.models.Tweet import Tweet
+from src.models.PTK.utils import text_utils
 import numpy as np
 import re
 from nltk.util import ngrams
@@ -100,7 +101,7 @@ def parse_tweet(file_path, is_source, source_time):
             return (user_vec, n_grams, time_dif)
 
 def text_process(s):
-    s = s.lower()
+    s = text_utils.lower_case(s)
     # s = re.sub(r'[^a-zA-Z0-9\s]', ' ', s)
     tokens = [token for token in s.split(" ") if token != ""]
     # n_grams = set.union(set(ngrams(tokens, 1)), set(ngrams(tokens, 2)))

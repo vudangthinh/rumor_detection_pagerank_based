@@ -1,0 +1,9 @@
+PTK
+
+Start: 14h44 26/4
+Data: gurlitt-all-rnr-threads, ottawashooting-all-rnr-threads, putinmissing-all-rnr-threads (1266 tweets)
+Pre-process: True
+Acc: 0.5
+
+Pre-process: False
+Acc: 0.58

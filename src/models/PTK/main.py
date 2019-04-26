@@ -1,6 +1,6 @@
 from sklearn.svm import SVC
 from src.models.PTK.propagation_tree_kernel import propagation_tree_kernel_function
-from src.models.PTK.pheme_dataloader import load_data
+from src.data.pheme_dataloader import load_data
 from sklearn.metrics import accuracy_score
 from random import shuffle
 from sklearn.model_selection import train_test_split

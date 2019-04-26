@@ -101,6 +101,9 @@ def parse_tweet(file_path, is_source, source_time):
             return (user_vec, n_grams, time_dif)
 
 def text_process(s):
+    # tokens = text_utils.process(s)
+    # return set.union(text_utils.convert_ngram(tokens, 1), text_utils.convert_ngram(tokens, 2))
+
     s = text_utils.lower_case(s)
     # s = re.sub(r'[^a-zA-Z0-9\s]', ' ', s)
     tokens = [token for token in s.split(" ") if token != ""]

@@ -28,7 +28,7 @@ def build_data():
 
 if __name__ == '__main__':
     X, y = build_data()
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3, random_state = 42)
     clf = RandomForestClassifier(n_jobs=8, random_state=0)
     clf.fit(X_train, y_train)
     y_pred = clf.predict(X_test)

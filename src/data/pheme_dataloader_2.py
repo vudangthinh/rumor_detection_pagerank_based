@@ -2,10 +2,12 @@ from os import listdir
 from os.path import isdir, join
 import json
 import networkx as nx
-from src.data.Tweet import Tweet
 from src.utils import text_utils, date_time_utils, graph_utils
 import numpy as np
 from nltk.util import ngrams
+
+word_vectors = text_utils.load_pretrain_embedding('/data/glove.twitter/w2v.twitter.27B.100d.txt')
+text_processor = text_utils.create_text_processor()
 
 def load_data(data_path):
     graph_list = []
@@ -59,18 +61,13 @@ def recursive_struc(structure_tree, tweet_dir, source, source_id, source_time, D
 def process_tweet(tweet_dir, key, source, source_time, source_id, DG):
     try:
         if source:
-            # file_path = join(tweet_dir, 'source-tweets', key + '.json')
-            # ur, cr, source_time = parse_tweet(file_path, True, source_time)
-            # tr = 0
-            # tweet_obj = Tweet(ur, cr, tr, True)
-            # tree.create_node(key, key, data=tweet_obj)
-            DG.add_node(key)
+            file_path = join(tweet_dir, 'source-tweets', key + '.json')
+            text_vector = parse_tweet(file_path, True, source_time)
+            DG.add_node(key, content=text_vector)
         else:
-            # file_path = join(tweet_dir, 'reactions', key + '.json')
-            # uv, cv, tv = parse_tweet(file_path, False, source_time)
-            # tweet_obj = Tweet(uv, cv, tv, False)
-            # tree.create_node(key, key, parent=source_id, data=tweet_obj)
-            DG.add_node(key)
+            file_path = join(tweet_dir, 'reactions', key + '.json')
+            text_vector = parse_tweet(file_path, False, source_time)
+            DG.add_node(key, content=text_vector)
             DG.add_edge(key, source_id)
     except FileNotFoundError as fnf_error:
         print(fnf_error)
@@ -81,34 +78,19 @@ def parse_tweet(file_path, is_source, source_time):
     with open(file_path) as file:
         data = json.load(file)
         text = data['text']
-        n_grams = text_process(text)
+        text_vector = text_process(text)
 
-        user = data['user']
-        verified = 1 if user['verified'] else 0
-        followers_count = user['followers_count']
-        friends_count = user['friends_count']
-        statuses_count = user['statuses_count']
-
-        user_vec = np.array([0 if friends_count == 0 else followers_count/friends_count, verified, statuses_count])
-
-        created_at = data['created_at']
-        timestamp = date_time_utils.convert_string_timestamp(created_at)
-        if is_source:
-            return (user_vec, n_grams, timestamp)
-        else:
-            time_dif = timestamp - source_time
-            return (user_vec, n_grams, time_dif)
+        return text_vector
 
 def text_process(s):
-    # tokens = text_utils.process(s)
-    # return set.union(text_utils.convert_ngram(tokens, 1), text_utils.convert_ngram(tokens, 2))
+    tokens = text_utils.process(text_processor, s)
 
-    s = text_utils.lower_case(s)
-    # s = re.sub(r'[^a-zA-Z0-9\s]', ' ', s)
-    tokens = [token for token in s.split(" ") if token != ""]
-    # n_grams = set.union(set(ngrams(tokens, 1)), set(ngrams(tokens, 2)))
-    n_grams = set(ngrams(tokens, 1))
-    return n_grams
+    s_embedding = np.zeros((word_vectors.vector_size, ))
+    for token in tokens:
+        token_embedding = text_utils.get_embedding(word_vectors, token)
+        s_embedding = s_embedding + token_embedding
+    s_embedding = s_embedding / len(tokens)
+    return s_embedding
 
 
 if __name__ == '__main__':

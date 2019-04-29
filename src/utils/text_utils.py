@@ -1,9 +1,11 @@
 import nltk
+import numpy as np
 from nltk.corpus import stopwords
 from nltk.tokenize import RegexpTokenizer
 from ekphrasis.classes.preprocessor import TextPreProcessor
 from ekphrasis.classes.tokenizer import SocialTokenizer
 from ekphrasis.dicts.emoticons import emoticons
+from gensim.models import KeyedVectors
 
 
 def create_text_processor():
@@ -52,6 +54,17 @@ def convert_ngram(tokens, n=1):
             n_grams.add(s)
 
         return n_grams
+
+def load_pretrain_embedding(path):
+    word_vectors = KeyedVectors.load_word2vec_format(path, binary=False)
+    return word_vectors
+
+def get_embedding(word_vectors, token):
+    if token in word_vectors:
+        return word_vectors[token]
+    else:
+        return np.zeros((word_vectors.vector_size, ))
+
 
 if __name__ == '__main__':
     text = '#WakeUpAmerica \nCo-pilot was a Muslim Convert \nhttp:\/\/t.co\/RYFQTVBYBL\n@seanhannity @greta @act4america \n@KrisParonto @JGilliam_SEAL Feb 18th'

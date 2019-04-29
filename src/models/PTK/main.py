@@ -18,6 +18,8 @@ def shuffle_data(tree_list, y):
 
 if __name__ == '__main__':
     tree_list, y = load_data('/data/rumor_detection/data/pheme/pheme_v2_extend/all-rnr-annotated-threads/temp')
+    for tree in tree_list[:10]:
+        tree.show()
     # tree_list, y = shuffle_data(tree_list, y)
     X_train, X_test, y_train, y_test = train_test_split(tree_list, y, test_size=0.3, random_state=0)
     print("Data size:", len(tree_list))

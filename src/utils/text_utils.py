@@ -5,22 +5,26 @@ from ekphrasis.classes.preprocessor import TextPreProcessor
 from ekphrasis.classes.tokenizer import SocialTokenizer
 from ekphrasis.dicts.emoticons import emoticons
 
-text_processor = TextPreProcessor(
-        normalize=['url', 'email', 'percent', 'money', 'phone', 'user',
-                   'time', 'url', 'date', 'number'],
-        fix_html=True,
-        segmenter="twitter",
-        corrector="twitter",
 
-        unpack_hashtags=True,
-        unpack_contractions=True,
-        spell_correct_elong=True,
+def create_text_processor():
+    text_processor = TextPreProcessor(
+            normalize=['url', 'email', 'percent', 'money', 'phone', 'user',
+                       'time', 'url', 'date', 'number'],
+            fix_html=True,
+            segmenter="twitter",
+            corrector="twitter",
 
-        # tokenizer=SocialTokenizer(lowercase=True).tokenize,
-        tokenizer=RegexpTokenizer(r'\w+').tokenize,
+            unpack_hashtags=True,
+            unpack_contractions=True,
+            spell_correct_elong=True,
 
-        dicts=[emoticons]
-    )
+            # tokenizer=SocialTokenizer(lowercase=True).tokenize,
+            tokenizer=RegexpTokenizer(r'\w+').tokenize,
+
+            dicts=[emoticons]
+        )
+
+    return text_processor
 
 def remove_stopword(tokens):
     stop_words = stopwords.words('english')
@@ -29,7 +33,7 @@ def remove_stopword(tokens):
 def lower_case(text):
     return text.lower()
 
-def process(text):
+def process(text_processor, text):
     text = text.replace("\/", '/')
     text = text.lower()
 

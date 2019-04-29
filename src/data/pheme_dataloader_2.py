@@ -1,16 +1,14 @@
 from os import listdir
 from os.path import isdir, join
 import json
-from treelib import Tree
+import networkx as nx
 from src.data.Tweet import Tweet
-from src.utils import text_utils, date_time_utils
+from src.utils import text_utils, date_time_utils, graph_utils
 import numpy as np
 from nltk.util import ngrams
 
-text_processor = text_utils.create_text_processor()
-
 def load_data(data_path):
-    tree_list = []
+    graph_list = []
     y = []
 
     for f in listdir(data_path):
@@ -19,59 +17,61 @@ def load_data(data_path):
             rumor_dir = join(topic_dir, 'rumours')
             non_rumor_dir = join(topic_dir, 'non-rumours')
 
-            rumor_tree_list = read_topic_dir(rumor_dir)
-            tree_list.extend(rumor_tree_list)
-            y.extend([1 for i in range(len(rumor_tree_list))])
+            rumor_graph_list = read_topic_dir(rumor_dir)
+            graph_list.extend(rumor_graph_list)
+            y.extend([1 for i in range(len(rumor_graph_list))])
 
-            non_rumor_tree_list = read_topic_dir(non_rumor_dir)
-            tree_list.extend(non_rumor_tree_list)
-            y.extend([0 for i in range(len(non_rumor_tree_list))])
+            non_rumor_graph_list = read_topic_dir(non_rumor_dir)
+            graph_list.extend(non_rumor_graph_list)
+            y.extend([0 for i in range(len(non_rumor_graph_list))])
 
-    return (tree_list, y)
+    return (graph_list, y)
 
 def read_topic_dir(topic_dir):
-    tree_list = []
+    graph_list = []
     for f in listdir(topic_dir):
         tweet_dir = join(topic_dir, f)
         if isdir(tweet_dir):
-            tree = Tree()
+            DG = nx.DiGraph()
 
             structure_file = join(tweet_dir, 'structure.json')
             with open(structure_file) as json_f:
                 structure_tree = json.load(json_f)
-                recursive_struc(structure_tree, tweet_dir, True, f, -1, tree)
+                recursive_struc(structure_tree, tweet_dir, True, f, -1, DG)
 
-                tree_list.append(tree)
+                graph_list.append(DG)
 
-    return tree_list
+    return graph_list
 
-def recursive_struc(structure_tree, tweet_dir, source, source_id, source_time, tree):
+def recursive_struc(structure_tree, tweet_dir, source, source_id, source_time, DG):
     for key, value in structure_tree.items():
         if source and key != source_id:
             continue
 
         if type(value) is dict:
-            # print(key, value)
-            source_time = process_tweet(tweet_dir, key, source, source_time, source_id, tree)
+            source_time = process_tweet(tweet_dir, key, source, source_time, source_id, DG)
 
             source_id_2 = key
-            recursive_struc(value, tweet_dir, False, source_id_2, source_time, tree)
+            recursive_struc(value, tweet_dir, False, source_id_2, source_time, DG)
         else:
-            process_tweet(tweet_dir, key, source, source_time, source_id, tree)
+            process_tweet(tweet_dir, key, source, source_time, source_id, DG)
 
-def process_tweet(tweet_dir, key, source, source_time, source_id, tree):
+def process_tweet(tweet_dir, key, source, source_time, source_id, DG):
     try:
         if source:
-            file_path = join(tweet_dir, 'source-tweets', key + '.json')
-            ur, cr, source_time = parse_tweet(file_path, True, source_time)
-            tr = 0
-            tweet_obj = Tweet(ur, cr, tr, True)
-            tree.create_node(key, key, data=tweet_obj)
+            # file_path = join(tweet_dir, 'source-tweets', key + '.json')
+            # ur, cr, source_time = parse_tweet(file_path, True, source_time)
+            # tr = 0
+            # tweet_obj = Tweet(ur, cr, tr, True)
+            # tree.create_node(key, key, data=tweet_obj)
+            DG.add_node(key)
         else:
-            file_path = join(tweet_dir, 'reactions', key + '.json')
-            uv, cv, tv = parse_tweet(file_path, False, source_time)
-            tweet_obj = Tweet(uv, cv, tv, False)
-            tree.create_node(key, key, parent=source_id, data=tweet_obj)
+            # file_path = join(tweet_dir, 'reactions', key + '.json')
+            # uv, cv, tv = parse_tweet(file_path, False, source_time)
+            # tweet_obj = Tweet(uv, cv, tv, False)
+            # tree.create_node(key, key, parent=source_id, data=tweet_obj)
+            DG.add_node(key)
+            DG.add_edge(key, source_id)
     except FileNotFoundError as fnf_error:
         print(fnf_error)
 
@@ -100,7 +100,7 @@ def parse_tweet(file_path, is_source, source_time):
             return (user_vec, n_grams, time_dif)
 
 def text_process(s):
-    # tokens = text_utils.process(text_processor, s)
+    # tokens = text_utils.process(s)
     # return set.union(text_utils.convert_ngram(tokens, 1), text_utils.convert_ngram(tokens, 2))
 
     s = text_utils.lower_case(s)
@@ -113,7 +113,10 @@ def text_process(s):
 
 if __name__ == '__main__':
     #test
-    tree_list = read_topic_dir('/Users/thinhvu/Documents/projects/6392078/all-rnr-annotated-threads/gurlitt-all-rnr-threads/rumours')
-    for tree in tree_list:
-        tree.show()
-        tree.show(data_property='user')
+    graph_list = read_topic_dir('/data/rumor_detection/data/pheme/pheme_v2_extend/all-rnr-annotated-threads/gurlitt-all-rnr-threads/rumours')
+    for index, graph in enumerate(graph_list):
+        for node in graph:
+            print(node)
+            break
+        print(index, graph.size())
+

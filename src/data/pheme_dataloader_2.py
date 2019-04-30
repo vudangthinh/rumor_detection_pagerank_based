@@ -89,7 +89,9 @@ def text_process(s):
     for token in tokens:
         token_embedding = text_utils.get_embedding(word_vectors, token)
         s_embedding = s_embedding + token_embedding
-    s_embedding = s_embedding / len(tokens)
+
+    if len(tokens) > 0:
+        s_embedding = s_embedding / len(tokens)
     return s_embedding
 
 

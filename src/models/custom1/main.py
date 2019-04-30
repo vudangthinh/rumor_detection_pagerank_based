@@ -3,15 +3,14 @@ from src.data.pheme_dataloader_2 import load_data
 from src.utils import graph_utils
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 import numpy as np
 
 def build_data():
-    graph_list, y = load_data('/data/rumor_detection/data/pheme/pheme_v2_extend/all-rnr-annotated-threads/temp')
+    graph_list, y = load_data('/data/rumor_detection/data/pheme/pheme_v2_extend/all-rnr-annotated-threads')
 
     vector_list = []
     for i, graph in enumerate(graph_list):
-        print('graph:', i)
         page_rank = graph_utils.pageranks(graph)
         i = 0
         for node, rank in page_rank.items():
@@ -33,5 +32,8 @@ if __name__ == '__main__':
     clf.fit(X_train, y_train)
     y_pred = clf.predict(X_test)
     print("Accuracy:", accuracy_score(y_test, y_pred))
+    print("Precision:", precision_score(y_test, y_pred))
+    print("Recall:", recall_score(y_test, y_pred))
+    print("F1:", f1_score(y_test, y_pred))
 
 

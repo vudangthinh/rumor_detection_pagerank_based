@@ -5,8 +5,9 @@ import networkx as nx
 from src.utils import text_utils, date_time_utils, graph_utils
 import numpy as np
 from nltk.util import ngrams
+from src.utils import config
 
-word_vectors = text_utils.load_pretrain_embedding('/data/glove.twitter/w2v.twitter.27B.100d.txt')
+word_vectors = text_utils.load_pretrain_embedding(config.EMBEDDING_FILE)
 text_processor = text_utils.create_text_processor()
 
 def load_data(data_path):

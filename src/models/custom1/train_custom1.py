@@ -5,9 +5,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 import numpy as np
+from src.utils import config
 
 def build_data():
-    graph_list, y = load_data('/data/rumor_detection/data/pheme/pheme_v2_extend/all-rnr-annotated-threads')
+    graph_list, y = load_data(config.DATA_PATH)
 
     vector_list = []
     for i, graph in enumerate(graph_list):

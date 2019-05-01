@@ -6,6 +6,7 @@ from src.data.Tweet import Tweet
 from src.utils import text_utils, date_time_utils
 import numpy as np
 from nltk.util import ngrams
+from src.utils import config
 
 text_processor = text_utils.create_text_processor()
 
@@ -52,8 +53,8 @@ def text_process(s):
 
 
 if __name__ == '__main__':
-    #test
-    tree_list = read_topic_dir('/Users/thinhvu/Documents/projects/6392078/all-rnr-annotated-threads/gurlitt-all-rnr-threads/rumours')
-    for tree in tree_list:
-        tree.show()
-        tree.show(data_property='user')
+    # export source tweets content
+    text_list, y = load_data(config.DATA_PATH)
+    with open('../../data/interim/source_tweets.txt', 'w') as writer:
+        for text in text_list:
+            writer.write(text + '\n')

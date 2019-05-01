@@ -14,6 +14,7 @@ class PHEME_Dataset(Dataset):
                 if token in word_vectors:
                     token_index = word_vectors.vocab[token].index
                 else:
+                    # print(token)
                     token_index = len(word_vectors.wv.vocab)
 
                 token_index_list.append(token_index)

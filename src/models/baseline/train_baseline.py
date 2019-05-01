@@ -6,6 +6,12 @@ from src.models.baseline import model
 from gensim.models import KeyedVectors
 from src.utils import config
 
+
+n_epoches = 5
+hidden_dim = 200
+target_size = 2
+batch_size = 1
+
 word_vectors = KeyedVectors.load_word2vec_format(config.EMBEDDING_FILE, binary=False)
 
 dataset = pheme_dataset.PHEME_Dataset(config.DATA_PATH, word_vectors)
@@ -15,12 +21,9 @@ valid_size = dataset_size - train_size
 print("Dataset size:", dataset_size)
 
 train_dataset, valid_dataset = random_split(dataset, (train_size, valid_size))
-train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True, num_workers=8)
-valid_loader = DataLoader(valid_dataset, batch_size=1, shuffle=False, num_workers=8)
+train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=8)
+valid_loader = DataLoader(valid_dataset, batch_size=batch_size, shuffle=False, num_workers=8)
 
-n_epoches = 5
-hidden_dim = 200
-target_size = 2
 train_model = model.Net(word_vectors, hidden_dim, target_size)
 
 criterion = torch.nn.CrossEntropyLoss()
@@ -37,15 +40,9 @@ for epoch in range(n_epoches):
     for i_batch, (text_embed, label) in enumerate(train_loader):
         text_embed = text_embed.to(device)
         label = label.to(device)
-        if label == 0:
-            label = torch.LongTensor([0, 1])
-        else:
-            label = torch.LongTensor([1, 0])
-
         print(text_embed.shape)
 
         pred = train_model(text_embed)
-        print(pred.shape)
         loss = criterion(pred, label)
         optimizer.zero_grad()
         loss.backward()

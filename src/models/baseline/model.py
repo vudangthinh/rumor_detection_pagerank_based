@@ -21,13 +21,13 @@ class Net(Module):
         input_dim = word_vectors.vector_size
 
         self.embedding = create_emb_layer(word_vectors, False)
-        self.lstm = nn.LSTM(input_dim, hidden_dim, num_layers=1)
+        self.lstm = nn.LSTM(input_dim, hidden_dim, num_layers=1, batch_first=True)
         self.linear = nn.Linear(hidden_dim, target_size)
 
     def forward(self, input_):
         embed_vector = self.embedding(input_)
-        embed_vector.transpose_(1, 0)
         lstm_output, lstm_hidden = self.lstm(embed_vector)
-        output = self.linear(lstm_hidden[0])
+        last_hidden = torch.squeeze(lstm_hidden[0], 0)
+        output = self.linear(last_hidden)
 
         return output

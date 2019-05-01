@@ -7,7 +7,7 @@ from gensim.models import KeyedVectors
 from src.utils import config
 
 
-n_epoches = 5
+n_epoches = 10
 hidden_dim = 200
 target_size = 2
 batch_size = 1
@@ -36,11 +36,12 @@ train_model.train()
 
 for epoch in range(n_epoches):
     running_loss = 0
+    correct = 0
 
     for i_batch, (text_embed, label) in enumerate(train_loader):
         text_embed = text_embed.to(device)
         label = label.to(device)
-        print(text_embed.shape)
+        # print(text_embed.shape)
 
         pred = train_model(text_embed)
         loss = criterion(pred, label)
@@ -49,7 +50,28 @@ for epoch in range(n_epoches):
         optimizer.step()
 
         running_loss += loss.item()
-        if i_batch % 100 == 99:
-            print('[%d, %5d] loss: %.3f' %
-                  (epoch + 1, i_batch + 1, running_loss / 100))
+        _, predicted = torch.max(pred.data, 1)
+        correct += (predicted == label).sum().item()
+        if i_batch % 1000 == 999:
+            print('[%d, %5d] loss: %.3f acc: %.3f' %
+                  (epoch + 1, i_batch + 1, running_loss / 1000, correct * 100.0 / (1000 * batch_size)))
             running_loss = 0.0
+            correct = 0
+
+# Test
+train_model.eval()
+total = 0
+correct = 0
+
+with torch.no_grad():
+    for text_embed, label in valid_loader:
+        text_embed = text_embed.to(device)
+        label = label.to(device)
+
+        pred = train_model(text_embed)
+        total += label.size(0)
+        _, predicted = torch.max(pred.data, 1)
+        correct += (predicted == label).sum().item()
+
+print('Valid Accuracy: %.3f' % (correct * 100.0 / total))
+

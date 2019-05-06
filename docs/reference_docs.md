@@ -5,6 +5,7 @@
 * [https://stackoverflow.com/questions/26962159/how-to-use-a-custom-svm-kernel]()
 * [https://scikit-learn.org/stable/modules/svm.html#custom-kernels]()
 * [https://nlp.stanford.edu/projects/glove/]()
+* [Semi-supervised learning method](https://www.aclweb.org/anthology/N18-1113)
 
 ### Text Pre-Processing for Twitter
 * [https://pypi.org/project/tweet-preprocessor/]()

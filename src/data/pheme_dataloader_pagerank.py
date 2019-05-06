@@ -95,7 +95,6 @@ def text_process(s):
         s_embedding = s_embedding / len(tokens)
     return s_embedding
 
-
 if __name__ == '__main__':
     #test
     graph_list = read_topic_dir('/data/rumor_detection/data/pheme/pheme_v2_extend/all-rnr-annotated-threads/gurlitt-all-rnr-threads/rumours')

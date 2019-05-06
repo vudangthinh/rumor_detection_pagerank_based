@@ -35,12 +35,19 @@ def remove_stopword(tokens):
 def lower_case(text):
     return text.lower()
 
+def remove_last_url(tokens):
+    if len(tokens) > 0 and tokens[-1] == 'url':
+        return tokens[:-1]
+    else:
+        return tokens
+
 def process(text_processor, text):
     text = text.replace("\/", '/')
     text = text.lower()
 
     tokens = text_processor.pre_process_doc(text)
     tokens = remove_stopword(tokens)
+    # tokens = remove_last_url(tokens)
     return tokens
 
 def convert_ngram(tokens, n=1):

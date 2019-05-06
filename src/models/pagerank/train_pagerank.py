@@ -1,5 +1,5 @@
 from gensim.models import KeyedVectors
-from src.data.pheme_dataloader_2 import load_data
+from src.data.pheme_dataloader_pagerank import load_data
 from src.utils import graph_utils
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier

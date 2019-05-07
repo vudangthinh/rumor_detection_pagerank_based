@@ -7,7 +7,6 @@ import numpy as np
 from nltk.util import ngrams
 from src.utils import config
 
-word_vectors = text_utils.load_pretrain_embedding(config.EMBEDDING_FILE)
 text_processor = text_utils.create_text_processor()
 
 def load_data(data_path):
@@ -63,12 +62,12 @@ def process_tweet(tweet_dir, key, source, source_time, source_id, DG):
     try:
         if source:
             file_path = join(tweet_dir, 'source-tweets', key + '.json')
-            text_vector = parse_tweet(file_path, True, source_time)
-            DG.add_node(key, content=text_vector)
+            tokens = parse_tweet(file_path, True, source_time)
+            DG.add_node(key, content=tokens)
         else:
             file_path = join(tweet_dir, 'reactions', key + '.json')
-            text_vector = parse_tweet(file_path, False, source_time)
-            DG.add_node(key, content=text_vector)
+            tokens = parse_tweet(file_path, False, source_time)
+            DG.add_node(key, content=tokens)
             DG.add_edge(key, source_id)
     except FileNotFoundError as fnf_error:
         print(fnf_error)
@@ -79,21 +78,13 @@ def parse_tweet(file_path, is_source, source_time):
     with open(file_path) as file:
         data = json.load(file)
         text = data['text']
-        text_vector = text_process(text)
+        tokens = text_process(text)
 
-        return text_vector
+        return tokens
 
 def text_process(s):
     tokens = text_utils.process(text_processor, s)
-
-    s_embedding = np.zeros((word_vectors.vector_size, ))
-    for token in tokens:
-        token_embedding = text_utils.get_embedding(word_vectors, token)
-        s_embedding = s_embedding + token_embedding
-
-    if len(tokens) > 0:
-        s_embedding = s_embedding / len(tokens)
-    return s_embedding
+    return tokens
 
 if __name__ == '__main__':
     #test

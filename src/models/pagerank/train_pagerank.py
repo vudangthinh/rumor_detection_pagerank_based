@@ -1,4 +1,5 @@
 from gensim.models import KeyedVectors
+from gensim.models.doc2vec import Doc2Vec
 from src.data.pheme_dataloader_pagerank import load_data
 from src.utils import graph_utils
 from sklearn.model_selection import train_test_split
@@ -9,6 +10,7 @@ from src.utils import config, text_utils
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 word_vectors = text_utils.load_pretrain_embedding(config.EMBEDDING_FILE)
+d2v_model = Doc2Vec.load(config.D2V_FILE)
 
 def build_data():
     graph_list, y = load_data(config.DATA_PATH)
@@ -17,7 +19,7 @@ def build_data():
 
     vector_list = []
     for i, graph in enumerate(graph_list):
-        vector_list.append(get_graph_vector(tfidf, graph))
+        vector_list.append(get_graph_vector(graph, tfidf, False))
 
     X = np.vstack(vector_list)
     return X, y
@@ -33,22 +35,31 @@ def train_tfidf(graph_list):
     tfidf.fit(tokens_list)
     return tfidf
 
-def get_graph_vector(tfidf, graph):
-    graph_vector = np.zeros((word_vectors.vector_size))
+def get_graph_vector(graph, tfidf, w2v):
+    if w2v:
+        embed_size = word_vectors.vector_size
+    else:
+        embed_size = d2v_model.vector_size
+
+    graph_vector = np.zeros((embed_size))
     page_rank = graph_utils.pageranks(graph)
     for node, rank in page_rank.items():
         tokens = graph.nodes[node]['content']
-        node_vector = np.zeros((word_vectors.vector_size,))
-        for token in tokens:
-            if tfidf:
-                token_embedding = text_utils.get_embedding(word_vectors, token) * tfidf.idf_[tfidf.vocabulary_[token]]
-            else:
-                token_embedding = text_utils.get_embedding(word_vectors, token)
 
-            node_vector = node_vector + token_embedding
+        if w2v:
+            node_vector = np.zeros((word_vectors.vector_size,))
+            for token in tokens:
+                if tfidf:
+                    token_embedding = text_utils.get_embedding(word_vectors, token) * tfidf.idf_[tfidf.vocabulary_[token]]
+                else:
+                    token_embedding = text_utils.get_embedding(word_vectors, token)
 
-        if len(tokens) > 0:
-            node_vector = node_vector / len(tokens)
+                node_vector = node_vector + token_embedding
+
+            if len(tokens) > 0:
+                node_vector = node_vector / len(tokens)
+        else:
+            node_vector = d2v_model.infer_vector(tokens)
 
         graph_vector += node_vector * rank
 

@@ -15,11 +15,14 @@ Time | Data | Embed size | Pre-process | Accuracy
 
 Time | Data | Embed size | Pre-process | Accuracy
 --- | --- | --- | --- | ---
-| | PHEME_v2 | 100(w2v.twitter.27B.100d.txt) | Yes | Accuracy: 0.733402489626556 <br>Precision: 0.7154308617234469 <br>Recall: 0.4897119341563786 <br>F1: 0.5814332247557004
-| | PHEME_v2 | 200(w2v.twitter.27B.200d.txt) | Yes | Accuracy: 0.7520746887966805 <br>Precision: 0.751503006012024 <br>Recall: 0.51440329218107 <br>F1: 0.6107491856677525
-| | PHEME_v2 | 300(twitter_w2c_300_v1) | Yes | Accuracy: 0.7712655601659751 <br>Precision: 0.7491349480968859 <br>Recall: 0.5939643347050755 <br>F1: 0.6625860749808722
-| | PHEME_v2 (remove last url) | 300(twitter_w2c_300_v1) | Yes | Accuracy: 0.7619294605809128 <br>Precision: 0.734375 <br>Recall: 0.5802469135802469 <br>F1: 0.6482758620689656
-| | PHEME_v2 | 300(twitter_all_text_w2c_300_v1) | Yes | Accuracy: 0.8096473029045643 <br>Precision: 0.7986798679867987 <br>Recall: 0.663923182441701 <br>F1: 0.7250936329588015
+| | PHEME_v2 | 100(w2v.twitter.27B.100d.txt) | Yes | Acc: 0.733 P: 0.715 R: 0.490 F1: 0.581
+| | PHEME_v2 | 200(w2v.twitter.27B.200d.txt) | Yes | Acc: 0.752 P: 0.752 R: 0.514 F1: 0.611
+| | PHEME_v2 | 300(twitter_w2c_300_v1) | Yes | Acc: 0.771 P: 0.749 R: 0.594 F1: 0.663
+| | PHEME_v2 (remove last url) | 300(twitter_w2c_300_v1) | Yes | Acc: 0.762 P: 0.734 R: 0.580 F1: 0.648
+| | PHEME_v2 | 300(twitter_all_text_w2c_300_v1) | Yes | Acc: 0.810 P: 0.799 R: 0.664 F1: 0.725
+| | PHEME_v2 | 300(twitter_d2v.model) | Yes | Acc: 0.692 P: 0.643 R: 0.417 F1: 0.506
+
+
 
 1. Try to run without pagerank for comparing
 

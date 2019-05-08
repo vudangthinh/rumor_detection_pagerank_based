@@ -12,12 +12,12 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--embed', default=True, action='store_false', help='type of embedding model')
-parser.add_argument('--tfidf', default=True, action='store_false', help='use tfidf score to weight word vector')
+parser.add_argument('--tfidf', default=False, action='store_true', help='use tfidf score to weight word vector')
 opt = parser.parse_args()
 
 w2v_model = opt.embed
 use_tfidf = opt.tfidf
-print(w2v_model, use_tfidf)
+print("Word2vec: {}\nTFIDF: {}".format(w2v_model, use_tfidf))
 
 if w2v_model:
     embed_model = text_utils.load_pretrain_embedding(config.EMBEDDING_FILE)

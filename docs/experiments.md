@@ -21,7 +21,7 @@ Time | Data | Embed size | Pre-process | Accuracy
 | | PHEME_v2 (remove last url) | 300(twitter_w2c_300_v1) | Yes | Acc: 0.762 P: 0.734 R: 0.580 F1: 0.648
 | | PHEME_v2 | 300(twitter_all_text_w2c_300_v1) | Yes | Acc: 0.810 P: 0.799 R: 0.664 F1: 0.725
 | | PHEME_v2 | 300(twitter_d2v.model) | Yes | Acc: 0.692 P: 0.643 R: 0.417 F1: 0.506
-
+| | PHEME_v2 | 300(twitter_all_text_w2c_300_v1) + tfidf | Yes | Acc: 0.805 P: 0.790 R: 0.661 F1: 0.720
 
 
 1. Try to run without pagerank for comparing

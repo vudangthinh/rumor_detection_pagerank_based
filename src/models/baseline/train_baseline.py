@@ -2,7 +2,7 @@ import torch
 from src.models.baseline import pheme_dataset
 from torch.utils.data import DataLoader, random_split
 from src.utils import config
-from src.models.baseline import model
+from src.models.baseline import model_baseline
 from gensim.models import KeyedVectors
 from src.utils import config
 
@@ -24,7 +24,7 @@ train_dataset, valid_dataset = random_split(dataset, (train_size, valid_size))
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=8)
 valid_loader = DataLoader(valid_dataset, batch_size=batch_size, shuffle=False, num_workers=8)
 
-train_model = model.Net(word_vectors, hidden_dim, target_size)
+train_model = model_baseline.Net(word_vectors, hidden_dim, target_size)
 
 criterion = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.SGD(train_model.parameters(), lr=1e-4)

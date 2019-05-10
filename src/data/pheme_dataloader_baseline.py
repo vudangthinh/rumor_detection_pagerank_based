@@ -51,6 +51,24 @@ def text_process(s):
 
     return tokens
 
+def load_all_tweet_ids(data_path):
+    all_tweet_ids = []
+
+    for f in listdir(data_path):
+        topic_dir = join(data_path, f)
+        if isdir(topic_dir):
+            rumor_dir = join(topic_dir, 'rumours')
+            non_rumor_dir = join(topic_dir, 'non-rumours')
+
+            for tweet_dir in listdir(rumor_dir):
+                if isdir(join(rumor_dir, tweet_dir)):
+                    all_tweet_ids.append(tweet_dir)
+
+            for tweet_dir in listdir(non_rumor_dir):
+                if isdir(join(non_rumor_dir, tweet_dir)):
+                    all_tweet_ids.append(tweet_dir)
+
+    return all_tweet_ids
 
 if __name__ == '__main__':
     # export source tweets content

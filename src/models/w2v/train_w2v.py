@@ -1,11 +1,19 @@
 import gensim
 from src.utils import config
 from src.data import pheme_dataloader_tweet_content
+from sklearn.model_selection import train_test_split
+from multiprocessing import cpu_count
 
 def process():
     text_list, y = pheme_dataloader_tweet_content.load_data(config.DATA_PATH)
-    model = gensim.models.Word2Vec(text_list, size=300, window=10, min_count=5, workers=20, iter=10)
+
+    model = gensim.models.Word2Vec(text_list, size=300, window=10, min_count=5, iter=10, workers=cpu_count())
     model.wv.save_word2vec_format('../../../pretrain_models/twitter_all_text_w2c_300_v1.txt', binary=False)
+
+def update_model(model, data):
+    model.build_vocab(data, update=True)
+    model.train(data, total_examples=model.corpus_count, epochs=model.iter)
+    return model
 
 if __name__ == '__main__':
     process()

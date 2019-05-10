@@ -11,7 +11,7 @@ from src.utils import config, text_utils
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--embed', default=True, action='store_false', help='type of embedding model')
+parser.add_argument('--embed', default=True, action='store_false', help='type of embedding model: word2vec or doc2vec')
 parser.add_argument('--tfidf', default=False, action='store_true', help='use tfidf score to weight word vector')
 opt = parser.parse_args()
 
@@ -27,6 +27,7 @@ else:
 
 def build_data():
     graph_list, y = load_data(config.DATA_PATH)
+
     if use_tfidf:
         tfidf = train_tfidf(graph_list)
     else:
@@ -37,14 +38,11 @@ def build_data():
         vector_list.append(get_graph_vector(graph, tfidf, w2v_model))
 
     X = np.vstack(vector_list)
+
     return X, y
 
 def train_tfidf(graph_list):
-    tokens_list = []
-    for graph in graph_list:
-        for node_name, node_content in graph.nodes(data=True):
-            tokens = node_content['content']
-            tokens_list.append(tokens)
+    tokens_list = graph_utils.extract_node_content(graph_list)
 
     tfidf = TfidfVectorizer(analyzer=lambda x: x)
     tfidf.fit(tokens_list)
@@ -78,8 +76,8 @@ def get_graph_vector(graph, tfidf, w2v):
 if __name__ == '__main__':
     X, y = build_data()
     np.savez('../../../data/processed/train_data', x=X, y=y)
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3, random_state = 42)
-    clf = RandomForestClassifier(n_jobs=8, random_state=0)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=config.RANDOM_STATE)
+    clf = RandomForestClassifier(n_estimators=200, n_jobs=8, random_state=0)
     clf.fit(X_train, y_train)
     y_pred = clf.predict(X_test)
     print("Acc: {:.3f} P: {:.3f} R: {:.3f} F1: {:.3f}".format(accuracy_score(y_test, y_pred), precision_score(y_test, y_pred), recall_score(y_test, y_pred), f1_score(y_test, y_pred)))

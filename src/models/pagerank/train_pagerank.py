@@ -3,7 +3,7 @@ from gensim.models import KeyedVectors
 from gensim.models.doc2vec import Doc2Vec
 from src.data.pheme_dataloader_pagerank import load_data
 from src.utils import graph_utils
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, KFold
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 import numpy as np

@@ -18,8 +18,8 @@ Time | Data | Embed size | Pre-process | Accuracy
 Time | Data | Embed size | Pre-process | Model | Accuracy
 --- | --- | --- | --- | --- | ---
 | | PHEME_v1 | 300(CV-not update) | Yes | RF(n_estimators=200) | Acc: 0.706 P: 0.763 R: 0.358 F1: 0.473
-| | PHEME_v1 | 300(CV-update) | Yes | RF(n_estimators=200) | Acc: 0.750 P: 0.723 R: 0.564 F1: 0.623
-| | PHEME_v1 | 200(CV-) | Yes | RF(n_estimators=200) | 
+| | PHEME_v1 | 300(CV-update) | Yes | RF(n_estimators=200) | Acc: 0.753 P: 0.715 R: 0.599 F1: 0.638
+| | PHEME_v1 | 200(CV-w2v.twitter.27B.200d.txt) | Yes | RF(n_estimators=200) | 
 
 
 #### PHEME v2

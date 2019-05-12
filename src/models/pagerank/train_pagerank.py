@@ -44,7 +44,7 @@ def process():
 
     if train_type == 'cv':
         topics = list(graph_dict.keys())
-        kf = KFold(n_splits=5, random_state=42, shuffle=True)
+        kf = KFold(n_splits=5, random_state=config.RANDOM_STATE, shuffle=True)
         for train_index, test_index in kf.split(topics):
             print('------')
             train_graph_list = []

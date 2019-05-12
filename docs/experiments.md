@@ -25,6 +25,7 @@ Time | Data | Embed size | Pre-process | Model | Accuracy
 | | PHEME_v2 | 300(twitter_all_text_w2c_300_v1) + tfidf | Yes | RF | Acc: 0.812 P: 0.792 R: 0.680 F1: 0.732 (original data, if fix wrong data acc will reduce)
 | | PHEME_v2 | 300(twitter_all_text_w2c_300_v1) | Yes | RF(n_estimators=200, random_state=0) | Acc: 0.837 P: 0.818 R: 0.733 F1: 0.773
 | | PHEME_v2 | 300(twitter_all_text_w2c_300_v1) + tfidf | Yes | RF(n_estimators=200, random_state=0) | Acc: 0.841 P: 0.823 R: 0.738 F1: 0.778
+| | PHEME_v2 | 200(w2v.twitter.27B.200d.txt) | Yes | RF(n_estimators=200, random_state=0) | Acc: 0.803 P: 0.823 R: 0.610 F1: 0.701
 
 
 1. Try to run without pagerank for comparing

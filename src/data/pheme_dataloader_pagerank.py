@@ -9,27 +9,25 @@ from src.utils import config
 
 text_processor = text_utils.create_text_processor()
 
-def load_data(data_path):
-    graph_list = []
-    y = []
+def load_data(data_path, data_version):
+    graph_dict = {}
+
+    pheme_v1_topics = ['charliehebdo-all-rnr-threads', 'ferguson-all-rnr-threads', 'germanwings-crash-all-rnr-threads', 'ottawashooting-all-rnr-threads', 'sydneysiege-all-rnr-threads']
 
     for f in listdir(data_path):
-        topic_dir = join(data_path, f)
-        if isdir(topic_dir):
-            rumor_dir = join(topic_dir, 'rumours')
-            non_rumor_dir = join(topic_dir, 'non-rumours')
+        if data_version == 'v2' or (data_version == 'v1' and f in pheme_v1_topics):
+            topic_dir = join(data_path, f)
+            if isdir(topic_dir):
+                rumor_dir = join(topic_dir, 'rumours')
+                non_rumor_dir = join(topic_dir, 'non-rumours')
 
-            rumor_graph_list = read_topic_dir(rumor_dir)
-            graph_list.extend(rumor_graph_list)
-            y.extend([1 for i in range(len(rumor_graph_list))])
+                graph_list = read_topic_dir(rumor_dir, label=1)
+                graph_list.extend(read_topic_dir(non_rumor_dir, label=0))
+                graph_dict[f] = graph_list
 
-            non_rumor_graph_list = read_topic_dir(non_rumor_dir)
-            graph_list.extend(non_rumor_graph_list)
-            y.extend([0 for i in range(len(non_rumor_graph_list))])
+    return graph_dict
 
-    return (graph_list, y)
-
-def read_topic_dir(topic_dir):
+def read_topic_dir(topic_dir, label):
     graph_list = []
     for f in listdir(topic_dir):
         tweet_dir = join(topic_dir, f)
@@ -41,7 +39,7 @@ def read_topic_dir(topic_dir):
                 structure_tree = json.load(json_f)
                 recursive_struc(structure_tree, tweet_dir, True, f, -1, DG)
 
-                graph_list.append(DG)
+                graph_list.append((DG, label))
 
     return graph_list
 

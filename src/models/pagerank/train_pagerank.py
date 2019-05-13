@@ -2,10 +2,11 @@ import argparse
 from gensim.models import KeyedVectors
 from gensim.models.doc2vec import Doc2Vec
 from src.data.pheme_dataloader_pagerank import load_data
-from src.utils import graph_utils
+from src.utils import graph_utils, trainer
 from src.models.w2v import train_w2v
 from sklearn.model_selection import train_test_split, KFold
 from sklearn.ensemble import RandomForestClassifier
+from sklearn import svm
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 import numpy as np
 from src.utils import config, text_utils
@@ -13,6 +14,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--data', default='v1', help='version of PHEME dataset')
+parser.add_argument('--model', default='rf', help='type of training method')
 parser.add_argument('--train_type', default='cv', help='type of training model: cross-validation or train-test-split')
 parser.add_argument('--embed_type', default=True, action='store_false', help='type of embedding model: word2vec or doc2vec')
 parser.add_argument('--embed_retrain', default=False, action='store_true', help='will retrain embedding model')
@@ -28,8 +30,9 @@ embed_update = opt.embed_update
 embed_file = opt.embed_file
 data_version = opt.data
 train_type = opt.train_type
-print("Word2vec: {}\nTFIDF: {}\nEmbed File: {}\nEmbed Retrain: {}\nEmbed Update: {}\nData Version: {}\nTrain Type: {}"
-      .format(embed_type, use_tfidf, embed_file, embed_retrain, embed_update, data_version, train_type))
+model_type = opt.model
+print("Word2vec: {}\nTFIDF: {}\nEmbed File: {}\nEmbed Retrain: {}\nEmbed Update: {}\nData Version: {}\nTrain Type: {}\nModel: {}"
+      .format(embed_type, use_tfidf, embed_file, embed_retrain, embed_update, data_version, train_type, model_type))
 
 if not embed_retrain:
     if embed_type :
@@ -120,11 +123,7 @@ def train_model(train_graph_list, y_train, test_graph_list, y_test):
 
     X_test = np.vstack(test_vector_list)
 
-    clf = RandomForestClassifier(n_estimators=200, n_jobs=8, random_state=0)
-    clf.fit(X_train, y_train)
-    y_pred = clf.predict(X_test)
-
-    return (accuracy_score(y_test, y_pred), precision_score(y_test, y_pred), recall_score(y_test, y_pred), f1_score(y_test, y_pred))
+    return trainer.train(X_train, X_test, y_train, y_test, model_type)
 
 def train_tfidf(graph_list):
     tokens_list = graph_utils.extract_node_content(graph_list)

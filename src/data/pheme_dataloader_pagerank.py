@@ -60,12 +60,12 @@ def process_tweet(tweet_dir, key, source, source_time, source_id, DG):
     try:
         if source:
             file_path = join(tweet_dir, 'source-tweets', key + '.json')
-            tokens = parse_tweet(file_path, True, source_time)
-            DG.add_node(key, content=tokens)
+            tokens, more_features = parse_tweet(file_path, True, source_time)
+            DG.add_node(key, content=tokens, more_features=more_features)
         else:
             file_path = join(tweet_dir, 'reactions', key + '.json')
-            tokens = parse_tweet(file_path, False, source_time)
-            DG.add_node(key, content=tokens)
+            tokens, more_features = parse_tweet(file_path, False, source_time)
+            DG.add_node(key, content=tokens, more_features=more_features)
             DG.add_edge(key, source_id)
     except FileNotFoundError as fnf_error:
         print(fnf_error)
@@ -78,7 +78,16 @@ def parse_tweet(file_path, is_source, source_time):
         text = data['text']
         tokens = text_process(text)
 
-        return tokens
+        capital_ratio = len([c for c in text if c.isupper()]) / len(text)
+        word_count = len(tokens)
+        question_mark = 1 if "?" in text else 0
+        exclamation_mark = 1 if "!" in text else 0
+        period_mark = 1 if "." in text else 0
+        favorite_count = data['favorite_count']
+        retweet_count = data['retweet_count']
+        more_features = np.array([capital_ratio, word_count, question_mark, exclamation_mark, period_mark, favorite_count, retweet_count])
+
+        return tokens, more_features
 
 def text_process(s):
     tokens = text_utils.process(text_processor, s)

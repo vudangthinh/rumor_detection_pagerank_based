@@ -141,29 +141,33 @@ def train_tfidf(graph_list):
     return tfidf
 
 def get_graph_vector(graph, tfidf, w2v, embed_model):
-    graph_vector = np.zeros((embed_model.vector_size))
     page_rank = graph_utils.pageranks(graph)
+
+    all_node_vector = []
     for node, rank in page_rank.items():
         tokens = graph.nodes[node]['content']
+        more_features = graph.nodes[node]['more_features']
+        # more_features = []
 
         if w2v:
-            node_vector = np.zeros((embed_model.vector_size,))
+            token_vector = np.zeros((embed_model.vector_size,))
             for token in tokens:
                 if tfidf:
                     token_embedding = text_utils.get_embedding(embed_model, token) * tfidf.idf_[tfidf.vocabulary_[token]]
                 else:
                     token_embedding = text_utils.get_embedding(embed_model, token)
 
-                node_vector = node_vector + token_embedding
+                token_vector = token_vector + token_embedding
 
+            node_vector = np.concatenate((token_vector, more_features))
             if len(tokens) > 0:
                 node_vector = node_vector / len(tokens)
         else:
-            node_vector = embed_model.infer_vector(tokens)
+            node_vector = np.concatenate((embed_model.infer_vector(tokens), more_features))
 
-        graph_vector += node_vector * rank
+        all_node_vector.append(node_vector * rank)
 
-    return graph_vector
+    return np.sum(all_node_vector, axis=0)
 
 if __name__ == '__main__':
     process()

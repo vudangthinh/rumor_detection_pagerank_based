@@ -19,6 +19,7 @@ def train(X_train, X_test, y_train, y_test, method, gridsearch=False):
     # print("Best params:", clf.best_params_)
     y_pred = clf.predict(X_test)
 
+    # print("Train score:", clf.score(X_train, y_train))
     acc, p, r, f1 = accuracy_score(y_test, y_pred), precision_score(y_test, y_pred), recall_score(y_test, y_pred), f1_score(y_test, y_pred)
     print("Predict:", (acc, p, r, f1))
 

@@ -2,6 +2,7 @@ from src.data import pheme_dataloader_baseline
 from src.utils import config
 from sklearn.model_selection import train_test_split
 import json
+import numpy as np
 
 
 def split_dataset():
@@ -14,6 +15,14 @@ def split_dataset():
 
     with open(config.SPLIT_DATA_FILE, 'w') as writer:
         json.dump(train_test_dict, writer)
+
+def shuffle_data(train_list, label_list):
+    indices = np.arange(train_list.shape[0])
+    np.random.shuffle(indices)
+
+    train_list = train_list[indices]
+    label_list = label_list[indices]
+    return train_list, label_list
 
 if __name__ == '__main__':
     split_dataset()

@@ -1,8 +1,9 @@
 import argparse
+import random
 from gensim.models import KeyedVectors
 from gensim.models.doc2vec import Doc2Vec
 from src.data.pheme_dataloader_pagerank import load_data
-from src.utils import graph_utils, trainer
+from src.utils import graph_utils, trainer, data_utils
 from src.models.w2v import train_w2v
 from sklearn.model_selection import train_test_split, KFold
 from sklearn.ensemble import RandomForestClassifier
@@ -66,6 +67,13 @@ def process():
                 test_graph_list.extend([x for (x, _) in graph_dict[topic]])
                 y_test.extend([y for (_, y) in graph_dict[topic]])
 
+            #suffer list
+            train_graph_list = np.array(train_graph_list)
+            test_graph_list = np.array(test_graph_list)
+            y_train = np.array(y_train)
+            y_test = np.array(y_test)
+
+            train_graph_list, y_train = data_utils.shuffle_data(train_graph_list, y_train)
             scores.append(train_model(train_graph_list, y_train, test_graph_list, y_test))
 
         print('CV Scores:', scores)

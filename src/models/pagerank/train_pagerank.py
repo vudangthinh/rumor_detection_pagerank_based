@@ -106,6 +106,7 @@ def process():
     print("Acc: {:.3f} P: {:.3f} R: {:.3f} F1: {:.3f}".format(acc, p, r, f1))
 
 def train_model(train_graph_list, y_train, test_graph_list, y_test, topic):
+
     if use_tfidf:
         tfidf = train_tfidf(train_graph_list)
     else:

@@ -1,4 +1,5 @@
 from sklearn.ensemble import RandomForestClassifier
+from xgboost import XGBClassifier
 from sklearn import svm
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 from sklearn.model_selection import GridSearchCV
@@ -11,9 +12,11 @@ def train(X_train, X_test, y_train, y_test, method, gridsearch=False):
             clf = GridSearchCV(RandomForestClassifier(), tuned_parameters, cv=5)
     else:
         if method == 'rf':
-            clf = RandomForestClassifier(n_estimators=200, max_depth=10, n_jobs=12, random_state=0)
+            clf = RandomForestClassifier(n_estimators=300, max_depth=10, n_jobs=12, random_state=0)
         elif method == 'svm':
             clf = svm.SVC(gamma='scale')
+        elif method == 'xgb':
+            clf = XGBClassifier(n_estimators=200, n_jobs=12, random_state=0)
 
     clf.fit(X_train, y_train)
     # print("Best params:", clf.best_params_)

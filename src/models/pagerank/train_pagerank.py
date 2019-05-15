@@ -1,5 +1,8 @@
+import sys
+sys.path.append('/data/rumor_detection/rumor_detection')
 import argparse
 import random
+from os.path import isdir, join
 from gensim.models import KeyedVectors
 from gensim.models.doc2vec import Doc2Vec
 from src.data.pheme_dataloader_pagerank import load_data
@@ -68,12 +71,12 @@ def process():
                 y_test.extend([y for (_, y) in graph_dict[topic]])
 
             #suffer list
-            train_graph_list = np.array(train_graph_list)
-            test_graph_list = np.array(test_graph_list)
-            y_train = np.array(y_train)
-            y_test = np.array(y_test)
-
-            train_graph_list, y_train = data_utils.shuffle_data(train_graph_list, y_train)
+            # train_graph_list = np.array(train_graph_list)
+            # test_graph_list = np.array(test_graph_list)
+            # y_train = np.array(y_train)
+            # y_test = np.array(y_test)
+            #
+            # train_graph_list, y_train = data_utils.shuffle_data(train_graph_list, y_train)
             scores.append(train_model(train_graph_list, y_train, test_graph_list, y_test))
 
         print('CV Scores:', scores)
@@ -109,7 +112,7 @@ def train_model(train_graph_list, y_train, test_graph_list, y_test):
     if embed_retrain:
         tokens_list = graph_utils.extract_node_content(train_graph_list)
         embed_model_retrain = train_w2v.direct_train_w2v(tokens_list)
-        # embed_model_retrain = text_utils.load_pretrain_embedding('../../../pretrain_models/cv/sydneysiege-all-rnr-threads.txt')
+        # embed_model_retrain = text_utils.load_pretrain_embedding(join('../../../pretrain_models/cv/', topic, '.txt'))
 
     train_vector_list = []
     for i, graph in enumerate(train_graph_list):
@@ -122,7 +125,7 @@ def train_model(train_graph_list, y_train, test_graph_list, y_test):
 
     if embed_update:
         embed_model_update = train_w2v.update_model(embed_model_retrain, graph_utils.extract_node_content(test_graph_list))
-        # embed_model_update = text_utils.load_pretrain_embedding('../../../pretrain_models/cv/update_sydneysiege-all-rnr-threads.txt')
+        # embed_model_update = text_utils.load_pretrain_embedding(join('../../../pretrain_models/cv/update_', topic, '.txt'))
 
     test_vector_list = []
     for i, graph in enumerate(test_graph_list):

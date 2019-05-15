@@ -80,16 +80,18 @@ def process():
             scores.append(train_model(train_graph_list, y_train, test_graph_list, y_test, topic))
 
         print('CV Scores:', scores)
+        total_test_size = 0
         acc = 0
         p = 0
         r = 0
         f1 = 0
-        for x, y, z, t in scores:
-            acc += x
-            p += y
-            r += z
-            f1 += t
-        acc, p, r, f1 = acc / len(scores), p / len(scores), r / len(scores), f1 / len(scores)
+        for test_size, x, y, z, t in scores:
+            total_test_size += test_size
+            acc += x * test_size
+            p += y * test_size
+            r += z * test_size
+            f1 += t * test_size
+        acc, p, r, f1 = acc / total_test_size, p / total_test_size, r / total_test_size, f1 / total_test_size
 
     else:
         graph_list = []
@@ -99,7 +101,7 @@ def process():
             y.extend([y for (_, y) in value])
 
         train_graph_list, test_graph_list, y_train, y_test = train_test_split(graph_list, y, test_size=0.3, random_state=config.RANDOM_STATE)
-        acc, p, r, f1 = train_model(train_graph_list, y_train, test_graph_list, y_test)
+        test_size, acc, p, r, f1 = train_model(train_graph_list, y_train, test_graph_list, y_test)
 
     print("Acc: {:.3f} P: {:.3f} R: {:.3f} F1: {:.3f}".format(acc, p, r, f1))
 

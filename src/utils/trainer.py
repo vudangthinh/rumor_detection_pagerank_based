@@ -11,7 +11,7 @@ def train(X_train, X_test, y_train, y_test, method, gridsearch=False):
             clf = GridSearchCV(RandomForestClassifier(), tuned_parameters, cv=5)
     else:
         if method == 'rf':
-            clf = RandomForestClassifier(n_estimators=200, n_jobs=12, random_state=0)
+            clf = RandomForestClassifier(n_estimators=200, max_depth=10, n_jobs=12, random_state=0)
         elif method == 'svm':
             clf = svm.SVC(gamma='scale')
 
@@ -19,8 +19,8 @@ def train(X_train, X_test, y_train, y_test, method, gridsearch=False):
     # print("Best params:", clf.best_params_)
     y_pred = clf.predict(X_test)
 
-    # print("Train score:", clf.score(X_train, y_train))
+    print("Train score:", clf.score(X_train, y_train))
     acc, p, r, f1 = accuracy_score(y_test, y_pred), precision_score(y_test, y_pred), recall_score(y_test, y_pred), f1_score(y_test, y_pred)
-    print("Predict:", (acc, p, r, f1))
+    print("Predict:", (X_test.shape[0], acc, p, r, f1))
 
-    return (acc, p, r, f1)
+    return (X_test.shape[0], acc, p, r, f1)

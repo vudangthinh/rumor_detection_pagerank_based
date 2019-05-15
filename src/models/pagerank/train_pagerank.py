@@ -109,6 +109,7 @@ def train_model(train_graph_list, y_train, test_graph_list, y_test):
     if embed_retrain:
         tokens_list = graph_utils.extract_node_content(train_graph_list)
         embed_model_retrain = train_w2v.direct_train_w2v(tokens_list)
+        # embed_model_retrain = text_utils.load_pretrain_embedding('../../../pretrain_models/cv/sydneysiege-all-rnr-threads.txt')
 
     train_vector_list = []
     for i, graph in enumerate(train_graph_list):
@@ -121,11 +122,14 @@ def train_model(train_graph_list, y_train, test_graph_list, y_test):
 
     if embed_update:
         embed_model_update = train_w2v.update_model(embed_model_retrain, graph_utils.extract_node_content(test_graph_list))
+        # embed_model_update = text_utils.load_pretrain_embedding('../../../pretrain_models/cv/update_sydneysiege-all-rnr-threads.txt')
 
     test_vector_list = []
     for i, graph in enumerate(test_graph_list):
         if embed_update:
             test_vector_list.append(get_graph_vector(graph, tfidf, embed_type, embed_model_update))
+        elif embed_retrain:
+            test_vector_list.append(get_graph_vector(graph, tfidf, embed_type, embed_model_retrain))
         else:
             test_vector_list.append(get_graph_vector(graph, tfidf, embed_type, embed_model))
 
@@ -147,7 +151,7 @@ def get_graph_vector(graph, tfidf, w2v, embed_model):
     for node, rank in page_rank.items():
         tokens = graph.nodes[node]['content']
         more_features = graph.nodes[node]['more_features']
-        # more_features = []
+        more_features = []
 
         if w2v:
             token_vector = np.zeros((embed_model.vector_size,))

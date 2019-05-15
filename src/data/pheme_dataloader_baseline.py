@@ -8,9 +8,9 @@ import numpy as np
 from nltk.util import ngrams
 from src.utils import config
 
-text_processor = text_utils.create_text_processor()
 
 def load_data(data_path):
+    text_processor = text_utils.create_text_processor()
     text_list = []
     y = []
 
@@ -20,17 +20,17 @@ def load_data(data_path):
             rumor_dir = join(topic_dir, 'rumours')
             non_rumor_dir = join(topic_dir, 'non-rumours')
 
-            rumor_tree_list = read_topic_dir(rumor_dir)
+            rumor_tree_list = read_topic_dir(rumor_dir, text_processor)
             text_list.extend(rumor_tree_list)
             y.extend([1 for i in range(len(rumor_tree_list))])
 
-            non_rumor_tree_list = read_topic_dir(non_rumor_dir)
+            non_rumor_tree_list = read_topic_dir(non_rumor_dir, text_processor)
             text_list.extend(non_rumor_tree_list)
             y.extend([0 for i in range(len(non_rumor_tree_list))])
 
     return (text_list, y)
 
-def read_topic_dir(topic_dir):
+def read_topic_dir(topic_dir, text_processor):
     text_list = []
     for f in listdir(topic_dir):
         tweet_dir = join(topic_dir, f)
@@ -40,13 +40,13 @@ def read_topic_dir(topic_dir):
             with open(tweet_file) as json_f:
                 tweet_data = json.load(json_f)
                 tweet_text = tweet_data['text']
-                tokens = text_process(tweet_text)
+                tokens = text_process(tweet_text, text_processor)
 
                 text_list.append(tokens)
 
     return text_list
 
-def text_process(s):
+def text_process(s, text_processor):
     tokens = text_utils.process(text_processor, s)
 
     return tokens

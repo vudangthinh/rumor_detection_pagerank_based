@@ -11,7 +11,7 @@ def train_w2v():
     model.wv.save_word2vec_format('../../../pretrain_models/twitter_all_text_w2c_300_v1.txt', binary=False)
 
 def direct_train_w2v(text_list):
-    model = gensim.models.Word2Vec(text_list, size=300, window=10, min_count=5, iter=10, workers=1, seed=11)#best 15
+    model = gensim.models.Word2Vec(text_list, size=300, window=10, min_count=5, iter=10, workers=1, seed=15)
     return model
 
 def update_model(model, data):

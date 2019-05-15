@@ -77,7 +77,7 @@ def process():
             # y_test = np.array(y_test)
             #
             # train_graph_list, y_train = data_utils.shuffle_data(train_graph_list, y_train)
-            scores.append(train_model(train_graph_list, y_train, test_graph_list, y_test))
+            scores.append(train_model(train_graph_list, y_train, test_graph_list, y_test, topic))
 
         print('CV Scores:', scores)
         acc = 0
@@ -103,7 +103,7 @@ def process():
 
     print("Acc: {:.3f} P: {:.3f} R: {:.3f} F1: {:.3f}".format(acc, p, r, f1))
 
-def train_model(train_graph_list, y_train, test_graph_list, y_test):
+def train_model(train_graph_list, y_train, test_graph_list, y_test, topic):
     if use_tfidf:
         tfidf = train_tfidf(train_graph_list)
     else:
@@ -112,7 +112,7 @@ def train_model(train_graph_list, y_train, test_graph_list, y_test):
     if embed_retrain:
         tokens_list = graph_utils.extract_node_content(train_graph_list)
         embed_model_retrain = train_w2v.direct_train_w2v(tokens_list)
-        # embed_model_retrain = text_utils.load_pretrain_embedding(join('../../../pretrain_models/cv/', topic, '.txt'))
+        # embed_model_retrain = text_utils.load_pretrain_embedding('../../../pretrain_models/cv/' + topic + '.txt')
 
     train_vector_list = []
     for i, graph in enumerate(train_graph_list):
@@ -125,7 +125,7 @@ def train_model(train_graph_list, y_train, test_graph_list, y_test):
 
     if embed_update:
         embed_model_update = train_w2v.update_model(embed_model_retrain, graph_utils.extract_node_content(test_graph_list))
-        # embed_model_update = text_utils.load_pretrain_embedding(join('../../../pretrain_models/cv/update_', topic, '.txt'))
+        # embed_model_update = text_utils.load_pretrain_embedding('../../../pretrain_models/cv/update_' + topic + '.txt')
 
     test_vector_list = []
     for i, graph in enumerate(test_graph_list):

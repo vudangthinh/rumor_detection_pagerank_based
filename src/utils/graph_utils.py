@@ -6,7 +6,7 @@ def draw(G):
     plt.show()
 
 def pageranks(G):
-    pageranks = nx.pagerank(G)
+    pageranks = nx.pagerank(G, alpha=0.8)
     return pageranks
 
 def extract_node_content(graph_list):

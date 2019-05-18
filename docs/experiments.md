@@ -17,8 +17,12 @@ Time | Data | Embed size | Pre-process | Accuracy
 #### PHEME v1
 Time | Data | Embed size | Pre-process | Model | Accuracy
 --- | --- | --- | --- | --- | ---
+| | PHEME_v1 | 300(CV-update) | Yes | RF(n_estimators=300, max_depth=10, random_state=0) - No pagerank, only source tweet | Acc: 0.679 P: 0.610 R: 0.364 F1: 0.370
 | | PHEME_v1 | 300(CV-not update) | Yes | RF(n_estimators=200) | Acc: 0.706 P: 0.763 R: 0.358 F1: 0.473
-| | PHEME_v1 | 300(CV-update) | Yes | RF(n_estimators=300, max_depth=10, random_state=RANDOM_STATE) | Acc: 0.776 P: 0.689 R: 0.612 F1: 0.636 (wrong: Acc: 0.753 P: 0.715 R: 0.599 F1: 0.638 (Acc: 0.753 P: 0.710 R: 0.612 F1: 0.642 / Acc: 0.758 P: 0.716 R: 0.597 F1: 0.645))
+| | PHEME_v1 | 300(CV-update) | Yes | RF(n_estimators=300, max_depth=10, random_state=0) | Acc: 0.776 P: 0.689 R: 0.612 F1: 0.636 (wrong: Acc: 0.753 P: 0.715 R: 0.599 F1: 0.638 (Acc: 0.753 P: 0.710 R: 0.612 F1: 0.642 / Acc: 0.758 P: 0.716 R: 0.597 F1: 0.645))
+| | PHEME_v1 | 400(CV-update) | Yes | RF(n_estimators=300, max_depth=10, random_state=0) | Acc: 0.774 P: 0.685 R: 0.624 F1: 0.638
+| | PHEME_v1 | 300(CV-update) | Yes | RF(n_estimators=300, max_depth=10, random_state=0) - Pagerank alpha: 0.8 | Acc: 0.779 P: 0.692 R: 0.613 F1: 0.639
+
 | | PHEME_v1 | 200(CV-w2v.twitter.27B.200d.txt) | Yes | RF(n_estimators=200) | 
 
 

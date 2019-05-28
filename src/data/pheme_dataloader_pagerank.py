@@ -10,7 +10,7 @@ import math
 from nltk.tag.stanford import StanfordPOSTagger
 
 text_processor = text_utils.create_text_processor()
-tweet_pos_tag_dict = text_utils.load_pos_tag()
+tweet_pos_tag_dict = text_utils.load_pos_tag('../../../data/interim/tweet_pos_tag.txt')
 
 def load_data(data_path, data_version):
     graph_dict = {}

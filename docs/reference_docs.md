@@ -10,6 +10,7 @@
 ### Text Pre-Processing for Twitter
 * [https://pypi.org/project/tweet-preprocessor/]()
 * [https://link.springer.com/chapter/10.1007/978-981-10-8198-9_22]()
+* [https://gate.ac.uk/demos/]()
 
 ### Kernel Method
 * [http://raetschlab.org/lectures/mkl-tutorial.pdf]()

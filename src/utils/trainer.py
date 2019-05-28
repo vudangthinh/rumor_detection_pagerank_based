@@ -1,5 +1,6 @@
 from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
+from sklearn.linear_model import LogisticRegression
 from sklearn import svm
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 from sklearn.model_selection import GridSearchCV
@@ -17,6 +18,8 @@ def train(X_train, X_test, y_train, y_test, method, gridsearch=False):
             clf = svm.SVC(gamma='scale')
         elif method == 'xgb':
             clf = XGBClassifier(n_estimators=200, n_jobs=12, random_state=0)
+        elif method == 'lr':
+            clf = LogisticRegression(random_state=42, class_weight='balanced', penalty='l1', C=0.1, solver='liblinear')
 
     clf.fit(X_train, y_train)
     # print("Best params:", clf.best_params_)

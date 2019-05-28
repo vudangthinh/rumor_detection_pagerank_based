@@ -126,6 +126,9 @@ def train_model(train_graph_list, y_train, test_graph_list, y_test, topic):
 
     X_train = np.vstack(train_vector_list)
 
+    if use_tfidf:
+        tfidf = train_tfidf(train_graph_list + test_graph_list)
+
     if embed_update:
         embed_model_update = train_w2v.update_model(embed_model_retrain, graph_utils.extract_node_content(test_graph_list))
         # embed_model_update = text_utils.load_pretrain_embedding('../../../pretrain_models/cv/update_' + topic + '.txt')
@@ -157,7 +160,7 @@ def get_graph_vector(graph, tfidf, w2v, embed_model):
     for node, rank in page_rank.items():
         tokens = graph.nodes[node]['content']
         more_features = graph.nodes[node]['more_features']
-        more_features = []
+        # more_features = []
 
         if w2v:
             token_vector = np.zeros((embed_model.vector_size,))

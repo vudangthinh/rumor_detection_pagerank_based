@@ -6,6 +6,15 @@ def draw(G):
     plt.show()
 
 def pageranks(G):
+    # personalization = {}
+    # for node_name, node_content in G.nodes(data=True):
+    #     personalization[node_name] = node_content['more_features'][8]
+    #
+    # total_count = sum(personalization.values())
+    # personalization_normal = {}
+    # for key, value in personalization.items():
+    #     personalization_normal[key] = value/total_count
+
     pageranks = nx.pagerank(G, alpha=0.8)
     return pageranks
 

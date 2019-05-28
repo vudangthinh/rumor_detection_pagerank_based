@@ -8,6 +8,11 @@ from ekphrasis.dicts.emoticons import emoticons
 from gensim.models import KeyedVectors, Word2Vec
 
 
+pen_treebank_tagset = ['CC', 'CD', 'DT', 'EX', 'FW', 'IN', 'IN/that', 'JJ', 'JJR', 'JJS', 'LS', 'MD', 'NN', 'NNS', 'NP',
+                       'NPS', 'PDT', 'POS', 'PP', 'PP$', 'RB', 'RBR', 'RBS', 'RP', 'SENT', 'SYM', 'TO', 'UH', 'VB', 'VBD',
+                       'VBG', 'VBN', 'VBP', 'VBZ', 'VH', 'VHD', 'VHG', 'VHN', 'VHP', 'VHZ', 'VV', 'VVD', 'VVG', 'VVN',
+                       'VVP', 'VVZ', 'WDT', 'WP', 'WP$', 'WRB', '#', '$', '“', '``', '(', ')', ',', ':']
+
 def create_text_processor():
     text_processor = TextPreProcessor(
             normalize=['url', 'email', 'percent', 'money', 'phone', 'user',
@@ -49,6 +54,16 @@ def process(text_processor, text):
     tokens = remove_stopword(tokens)
     # tokens = remove_last_url(tokens)
     return tokens
+
+def convert_pos_tag(stanford_tagger, tokens):
+    pos_vec = np.zeros((len(pen_treebank_tagset)))
+
+    tag_list = stanford_tagger.tag(tokens)
+    for token, tag in tag_list:
+        if tag in pen_treebank_tagset:
+            pos_vec[pen_treebank_tagset.index(tag)] += 1
+
+    return pos_vec
 
 def convert_ngram(tokens, n=1):
     if n==1:

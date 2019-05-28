@@ -6,8 +6,12 @@ from src.utils import text_utils, date_time_utils, graph_utils
 import numpy as np
 from nltk.util import ngrams
 from src.utils import config
+import math
+from nltk.tag.stanford import StanfordPOSTagger
 
 text_processor = text_utils.create_text_processor()
+stanford_tagger = StanfordPOSTagger(model_filename='../../../libs/stanford_postagger/models/english-bidirectional-distsim.tagger',
+                                    path_to_jar='../../../libs/stanford_postagger/stanford-postagger.jar')
 
 def load_data(data_path, data_version):
     graph_dict = {}
@@ -79,15 +83,25 @@ def parse_tweet(file_path, is_source, source_time):
         tokens = text_process(text)
 
         capital_ratio = len([c for c in text if c.isupper()]) / len(text)
+        pos_tags = text_utils.convert_pos_tag(stanford_tagger, tokens)
         word_count = len(tokens)
         question_mark = 1 if "?" in text else 0
         exclamation_mark = 1 if "!" in text else 0
         period_mark = 1 if "." in text else 0
-        favorite_count = data['favorite_count']
-        retweet_count = data['retweet_count']
-        more_features = np.array([capital_ratio, word_count, question_mark, exclamation_mark, period_mark, favorite_count, retweet_count])
 
-        return tokens, more_features
+        user_tweet_count = data['user']['statuses_count']
+        user_list_count = data['user']['listed_count']
+        user_follow_ratio = math.log10(data['user']['followers_count']/data['user']['friends_count']) if data['user']['friends_count'] > 0 and data['user']['followers_count'] > 0 else 0
+        user_account_create_time = date_time_utils.get_year(data['user']['created_at'])
+        post_create_time = date_time_utils.get_year(data['created_at'])
+        user_age = post_create_time - user_account_create_time
+        user_verified = int(data['user']['verified'])
+
+        content_features = np.array([capital_ratio, word_count, question_mark, exclamation_mark, period_mark])
+        content_features = np.concatenate((content_features, pos_tags))
+        social_features = np.array([user_tweet_count, user_list_count, user_follow_ratio, user_age, user_verified])
+
+        return tokens, np.concatenate((content_features, social_features))
 
 def text_process(s):
     tokens = text_utils.process(text_processor, s)

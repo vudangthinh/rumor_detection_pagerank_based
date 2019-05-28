@@ -10,8 +10,7 @@ import math
 from nltk.tag.stanford import StanfordPOSTagger
 
 text_processor = text_utils.create_text_processor()
-stanford_tagger = StanfordPOSTagger(model_filename='../../../libs/stanford_postagger/models/english-bidirectional-distsim.tagger',
-                                    path_to_jar='../../../libs/stanford_postagger/stanford-postagger.jar')
+tweet_pos_tag_dict = text_utils.load_pos_tag()
 
 def load_data(data_path, data_version):
     graph_dict = {}
@@ -64,11 +63,11 @@ def process_tweet(tweet_dir, key, source, source_time, source_id, DG):
     try:
         if source:
             file_path = join(tweet_dir, 'source-tweets', key + '.json')
-            tokens, more_features = parse_tweet(file_path, True, source_time)
+            tokens, more_features = parse_tweet(key, file_path, True, source_time)
             DG.add_node(key, content=tokens, more_features=more_features)
         else:
             file_path = join(tweet_dir, 'reactions', key + '.json')
-            tokens, more_features = parse_tweet(file_path, False, source_time)
+            tokens, more_features = parse_tweet(key, file_path, False, source_time)
             DG.add_node(key, content=tokens, more_features=more_features)
             DG.add_edge(key, source_id)
     except FileNotFoundError as fnf_error:
@@ -76,14 +75,14 @@ def process_tweet(tweet_dir, key, source, source_time, source_id, DG):
 
     return source_time
 
-def parse_tweet(file_path, is_source, source_time):
+def parse_tweet(tweet_id, file_path, is_source, source_time):
     with open(file_path) as file:
         data = json.load(file)
         text = data['text']
         tokens = text_process(text)
 
         capital_ratio = len([c for c in text if c.isupper()]) / len(text)
-        pos_tags = text_utils.convert_pos_tag(stanford_tagger, tokens)
+        pos_tags = tweet_pos_tag_dict[tweet_id]
         word_count = len(tokens)
         question_mark = 1 if "?" in text else 0
         exclamation_mark = 1 if "!" in text else 0

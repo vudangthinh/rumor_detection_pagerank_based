@@ -88,6 +88,18 @@ def get_embedding(word_vectors, token):
     else:
         return np.zeros((word_vectors.vector_size, ))
 
+def load_pos_tag(pos_tag_file):
+    tweet_pos_tag_dict = {}
+    with open(pos_tag_file, 'r') as file:
+        for line in file:
+            line_arr = line.split('\t')
+            pos_tag = []
+            for value in line_arr[1:len(line_arr)]:
+                pos_tag.append(float(value))
+
+            tweet_pos_tag_dict[line_arr[0]] = np.array(pos_tag)
+
+    return tweet_pos_tag_dict
 
 if __name__ == '__main__':
     text = '#WakeUpAmerica \nCo-pilot was a Muslim Convert \nhttp:\/\/t.co\/RYFQTVBYBL\n@seanhannity @greta @act4america \n@KrisParonto @JGilliam_SEAL Feb 18th'

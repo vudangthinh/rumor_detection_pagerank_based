@@ -160,7 +160,7 @@ def get_graph_vector(graph, tfidf, w2v, embed_model):
     for node, rank in page_rank.items():
         tokens = graph.nodes[node]['content']
         more_features = graph.nodes[node]['more_features']
-        # more_features = []
+        more_features = []
 
         if w2v:
             token_vector = np.zeros((embed_model.vector_size,))
@@ -172,9 +172,10 @@ def get_graph_vector(graph, tfidf, w2v, embed_model):
 
                 token_vector = token_vector + token_embedding
 
-            node_vector = np.concatenate((token_vector, more_features))
             if len(tokens) > 0:
-                node_vector = node_vector / len(tokens)
+                token_vector = token_vector / len(tokens)
+
+            node_vector = np.concatenate((token_vector, more_features))
         else:
             node_vector = np.concatenate((embed_model.infer_vector(tokens), more_features))
 

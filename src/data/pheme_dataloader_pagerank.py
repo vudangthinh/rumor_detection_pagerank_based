@@ -10,7 +10,7 @@ import math
 from nltk.tag.stanford import StanfordPOSTagger
 
 text_processor = text_utils.create_text_processor()
-tweet_pos_tag_dict = text_utils.load_pos_tag('../../../data/interim/tweet_pos_tag.txt')
+# tweet_pos_tag_dict = text_utils.load_pos_tag('../../../data/interim/tweet_stanford_pos_tag.txt')
 
 def load_data(data_path, data_version):
     graph_dict = {}
@@ -82,7 +82,11 @@ def parse_tweet(tweet_id, file_path, is_source, source_time):
         tokens = text_process(text)
 
         capital_ratio = len([c for c in text if c.isupper()]) / len(text)
-        pos_tags = tweet_pos_tag_dict[tweet_id]
+        # if tweet_id in tweet_pos_tag_dict:
+        #     pos_tags = tweet_pos_tag_dict[tweet_id]
+        # else:
+        #     print(tweet_id)
+        #     pos_tags = np.zeros((58))
         word_count = len(tokens)
         question_mark = 1 if "?" in text else 0
         exclamation_mark = 1 if "!" in text else 0
@@ -97,7 +101,7 @@ def parse_tweet(tweet_id, file_path, is_source, source_time):
         user_verified = int(data['user']['verified'])
 
         content_features = np.array([capital_ratio, word_count, question_mark, exclamation_mark, period_mark])
-        content_features = np.concatenate((content_features, pos_tags))
+        # content_features = np.concatenate((content_features, pos_tags))
         social_features = np.array([user_tweet_count, user_list_count, user_follow_ratio, user_age, user_verified])
 
         return tokens, np.concatenate((content_features, social_features))

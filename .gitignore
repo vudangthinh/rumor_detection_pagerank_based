@@ -1,3 +1,6 @@
 .idea/
 .idea/vcs.xml
 pretrain_models/twitter_d2v.model.docvecs.vectors_docs.npy
+data/interim/tweet_stanford_pos_tag.txt
+data/interim/tweet_pos_tag.txt
+src/data/nohup.out

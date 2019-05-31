@@ -25,6 +25,7 @@ parser.add_argument('--embed_retrain', default=False, action='store_true', help=
 parser.add_argument('--embed_update', default=False, action='store_true', help='will retrain embedding model')
 parser.add_argument('--embed_file', default=config.EMBEDDING_FILE, help='path to embedding file')
 parser.add_argument('--tfidf', default=False, action='store_true', help='use tfidf score to weight word vector')
+parser.add_argument('--centrality', default='pagerank', help='type of centrality in graph')
 opt = parser.parse_args()
 
 embed_type = opt.embed_type
@@ -35,8 +36,9 @@ embed_file = opt.embed_file
 data_version = opt.data
 train_type = opt.train_type
 model_type = opt.model
-print("Word2vec: {}\nTFIDF: {}\nEmbed File: {}\nEmbed Retrain: {}\nEmbed Update: {}\nData Version: {}\nTrain Type: {}\nModel: {}"
-      .format(embed_type, use_tfidf, embed_file, embed_retrain, embed_update, data_version, train_type, model_type))
+centrality_type = opt.centrality
+print("Word2vec: {}\nTFIDF: {}\nEmbed File: {}\nEmbed Retrain: {}\nEmbed Update: {}\nData Version: {}\nTrain Type: {}\nModel: {}\nCentrality: {}"
+      .format(embed_type, use_tfidf, embed_file, embed_retrain, embed_update, data_version, train_type, model_type, centrality_type))
 
 if not embed_retrain:
     if embed_type :
@@ -154,10 +156,10 @@ def train_tfidf(graph_list):
     return tfidf
 
 def get_graph_vector(graph, tfidf, w2v, embed_model):
-    page_rank = graph_utils.pageranks(graph)
+    node_centrality = graph_utils.graph_centrality(graph, type=centrality_type)
 
     all_node_vector = []
-    for node, rank in page_rank.items():
+    for node, rank in node_centrality.items():
         tokens = graph.nodes[node]['content']
         more_features = graph.nodes[node]['more_features']
         more_features = []

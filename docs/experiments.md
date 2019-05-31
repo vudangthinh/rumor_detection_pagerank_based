@@ -28,6 +28,14 @@ Time | Data | Embed size | Pre-process | Model | Accuracy
 | | PHEME_v1 | 200(CV-w2v.twitter.27B.200d.txt) | Yes | RF(n_estimators=200) | 
 
 
+Degree centrality: Acc: 0.776 P: 0.688 R: 0.612 F1: 0.638 (normalized: Acc: 0.773 P: 0.690 R: 0.602 F1: 0.631)
+In Degree centrality: Acc: 0.766 P: 0.681 R: 0.602 F1: 0.617 (both normalized and not)
+Closeness: Acc: 0.772 P: 0.688 R: 0.609 F1: 0.630 (undirected graph: Acc: 0.765 P: 0.683 R: 0.547 F1: 0.602)
+Betweenness: Acc: 0.757 P: 0.692 R: 0.536 F1: 0.585 (undirected, unnormalized)
+Average: Acc: 0.761 P: 0.681 R: 0.513 F1: 0.579
+Harmonic: Acc: 0.775 P: 0.694 R: 0.613 F1: 0.633
+Second order centrality: Acc: 0.725 P: 0.634 R: 0.421 F1: 0.501
+
 #### PHEME v2
 Time | Data | Embed size | Pre-process | Model | Accuracy
 --- | --- | --- | --- | --- | ---

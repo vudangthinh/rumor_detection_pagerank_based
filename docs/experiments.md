@@ -37,6 +37,7 @@ Harmonic: Acc: 0.775 P: 0.694 R: 0.613 F1: 0.633
 Second order centrality: Acc: 0.725 P: 0.634 R: 0.421 F1: 0.501  
 
 Centrality | Accuracy | Precision | Recall | F1
+--- | --- | --- | --- | ---
 Degree Centrality | 0.773 | 0.690 | 0.602 | 0.631
 Closeness Centrality | 0.772 | 0.688 | 0.609 | 0.630
 Betweenness Centrality | 0.757 | 0.692 | 0.536 | 0.585

@@ -40,11 +40,10 @@ Centrality | Accuracy | Precision | Recall | F1
 --- | --- | --- | --- | ---
 Degree Centrality | 0.773 | 0.690 | 0.602 | 0.631
 Closeness Centrality | 0.772 | 0.688 | 0.609 | 0.630
-Betweenness Centrality | 0.757 | 0.692 | 0.536 | 0.585
+Betweenness Centrality | 0.757 | **0.692** | 0.536 | 0.585
 Equal Centrality | 0.761 | 0.681 | 0.513 | 0.579
-Harmonic Centrality | 0.775 | **0.694** | 0.613 | 0.633
 Second-order Centrality | 0.725 | 0.634 | 0.421 | 0.501
-Pagerank Centrality | **0.779** | 0.692 | **0.613** | **0.639**
+Pagerank Centrality | **0.779** | **0.692** | **0.613** | **0.639**
 
 #### PHEME v2
 Time | Data | Embed size | Pre-process | Model | Accuracy

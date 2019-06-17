@@ -104,7 +104,7 @@ def parse_tweet(tweet_id, file_path, is_source, source_time):
         # content_features = np.concatenate((content_features, pos_tags))
         social_features = np.array([user_tweet_count, user_list_count, user_follow_ratio, user_age, user_verified])
 
-        return tokens, np.concatenate((content_features, social_features))
+        return tokens, content_features #np.concatenate((content_features, social_features))
 
 def text_process(s):
     tokens = text_utils.process(text_processor, s)

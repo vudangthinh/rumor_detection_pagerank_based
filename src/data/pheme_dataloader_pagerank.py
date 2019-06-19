@@ -25,6 +25,8 @@ def load_data(data_path, data_version):
                 non_rumor_dir = join(topic_dir, 'non-rumours')
 
                 graph_list = read_topic_dir(rumor_dir, label=1)
+
+
                 graph_list.extend(read_topic_dir(non_rumor_dir, label=0))
                 graph_dict[f] = graph_list
 
@@ -63,12 +65,12 @@ def process_tweet(tweet_dir, key, source, source_time, source_id, DG):
     try:
         if source:
             file_path = join(tweet_dir, 'source-tweets', key + '.json')
-            tokens, more_features = parse_tweet(key, file_path, True, source_time)
-            DG.add_node(key, content=tokens, more_features=more_features)
+            tokens, more_features, source_time = parse_tweet(key, file_path, True, source_time)
+            DG.add_node(key, content=tokens, more_features=more_features, time=0)
         else:
             file_path = join(tweet_dir, 'reactions', key + '.json')
-            tokens, more_features = parse_tweet(key, file_path, False, source_time)
-            DG.add_node(key, content=tokens, more_features=more_features)
+            tokens, more_features, time_dif = parse_tweet(key, file_path, False, source_time)
+            DG.add_node(key, content=tokens, more_features=more_features, time=time_dif)
             DG.add_edge(key, source_id)
     except FileNotFoundError as fnf_error:
         print(fnf_error)
@@ -104,7 +106,14 @@ def parse_tweet(tweet_id, file_path, is_source, source_time):
         # content_features = np.concatenate((content_features, pos_tags))
         social_features = np.array([user_tweet_count, user_list_count, user_follow_ratio, user_age, user_verified])
 
-        return tokens, content_features #np.concatenate((content_features, social_features))
+        created_at = data['created_at']
+        timestamp = date_time_utils.convert_string_timestamp(created_at)
+        if is_source:
+            time_dif = timestamp
+        else:
+            time_dif = timestamp - source_time
+
+        return tokens, np.concatenate((content_features, social_features)), time_dif #np.concatenate((content_features, social_features))
 
 def text_process(s):
     tokens = text_utils.process(text_processor, s)

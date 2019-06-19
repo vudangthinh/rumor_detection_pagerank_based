@@ -35,6 +35,10 @@ Betweenness: Acc: 0.757 P: 0.692 R: 0.536 F1: 0.585 (undirected, unnormalized)
 Average: Acc: 0.761 P: 0.681 R: 0.513 F1: 0.579  
 Harmonic: Acc: 0.775 P: 0.694 R: 0.613 F1: 0.633  
 Second order centrality: Acc: 0.725 P: 0.634 R: 0.421 F1: 0.501  
+Time reduce (log e): Acc: 0.779 P: 0.699 R: 0.607 F1: 0.640
+Time reduce (log e): Acc: 0.781 P: 0.706 R: 0.601 F1: 0.641 (content and social features)
+Time reduce (log 2): Acc: 0.781 P: 0.702 R: 0.611 F1: 0.641
+
 
 Centrality | Accuracy | Precision | Recall | F1
 --- | --- | --- | --- | ---

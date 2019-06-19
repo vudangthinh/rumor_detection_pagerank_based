@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import networkx as nx
+import math
 
 def draw(G):
     nx.draw(G)
@@ -26,6 +27,8 @@ def graph_centrality(G, type):
         return second_order_centrality(G)
     elif type == 'percolation':
         return percolation_centrality(G)
+    elif type == 'time':
+        return time_centrality(G)
 
 def average_centrality(G):
     centrality = {}
@@ -45,7 +48,7 @@ def pageranks(G):
     #     personalization_normal[key] = value/total_count
 
     pageranks = nx.pagerank(G, alpha=0.8)
-    return normalize(pageranks)
+    return pageranks
 
 def degree_centrality(G):
     node_degree_centrality = nx.degree_centrality(G)
@@ -71,6 +74,16 @@ def second_order_centrality(G):
 
 def percolation_centrality(G):
     return nx.percolation_centrality(G)
+
+def time_centrality(G):
+    centrality = {}
+    for node_name, node_content in G.nodes(data=True):
+        if node_content['time'] <= math.e:
+            centrality[node_name] = 1
+        else:
+            centrality[node_name] = 1/math.log(node_content['time'])
+
+    return normalize(centrality)
 
 def normalize(centrality):
     if len(centrality) == 1:

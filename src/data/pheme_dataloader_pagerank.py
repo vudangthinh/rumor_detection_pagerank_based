@@ -25,8 +25,6 @@ def load_data(data_path, data_version):
                 non_rumor_dir = join(topic_dir, 'non-rumours')
 
                 graph_list = read_topic_dir(rumor_dir, label=1)
-
-
                 graph_list.extend(read_topic_dir(non_rumor_dir, label=0))
                 graph_dict[f] = graph_list
 
@@ -48,30 +46,33 @@ def read_topic_dir(topic_dir, label):
 
     return graph_list
 
-def recursive_struc(structure_tree, tweet_dir, source, source_id, source_time, DG):
+def recursive_struc(structure_tree, tweet_dir, is_root, source_id, source_time, DG):
     for key, value in structure_tree.items():
-        if source and key != source_id:
+        if is_root and key != source_id:
             continue
 
         if type(value) is dict:
-            source_time = process_tweet(tweet_dir, key, source, source_time, source_id, DG)
+            source_time_2 = process_tweet(tweet_dir, key, is_root, True, source_time, source_id, DG)
 
             source_id_2 = key
-            recursive_struc(value, tweet_dir, False, source_id_2, source_time, DG)
+            recursive_struc(value, tweet_dir, False, source_id_2, source_time_2, DG)
         else:
-            process_tweet(tweet_dir, key, source, source_time, source_id, DG)
+            process_tweet(tweet_dir, key, is_root, False, source_time, source_id, DG)
 
-def process_tweet(tweet_dir, key, source, source_time, source_id, DG):
+def process_tweet(tweet_dir, key, is_root, source, source_time, source_id, DG):
     try:
-        if source:
+        if is_root:
             file_path = join(tweet_dir, 'source-tweets', key + '.json')
-            tokens, more_features, source_time = parse_tweet(key, file_path, True, source_time)
+            tokens, more_features, time_dif, source_time = parse_tweet(key, file_path, True, source_time)
             DG.add_node(key, content=tokens, more_features=more_features, time=0)
         else:
             file_path = join(tweet_dir, 'reactions', key + '.json')
-            tokens, more_features, time_dif = parse_tweet(key, file_path, False, source_time)
+            tokens, more_features, time_dif, source_time = parse_tweet(key, file_path, source, source_time)
             DG.add_node(key, content=tokens, more_features=more_features, time=time_dif)
-            DG.add_edge(key, source_id)
+            # DG.add_edge(key, source_id)
+            if time_dif < math.e:
+                time_dif = math.e
+            DG.add_weighted_edges_from([(key, source_id, 1.0), (source_id, key, 1 / math.log(time_dif))])
     except FileNotFoundError as fnf_error:
         print(fnf_error)
 
@@ -108,12 +109,9 @@ def parse_tweet(tweet_id, file_path, is_source, source_time):
 
         created_at = data['created_at']
         timestamp = date_time_utils.convert_string_timestamp(created_at)
-        if is_source:
-            time_dif = timestamp
-        else:
-            time_dif = timestamp - source_time
+        time_dif = timestamp - source_time
 
-        return tokens, np.concatenate((content_features, social_features)), time_dif #np.concatenate((content_features, social_features))
+        return tokens, np.concatenate((content_features, social_features)), time_dif, timestamp #np.concatenate((content_features, social_features))
 
 def text_process(s):
     tokens = text_utils.process(text_processor, s)

@@ -2,8 +2,14 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import math
 
-def draw(G):
-    nx.draw(G)
+def draw(G, pagerank=False):
+    if pagerank:
+        labels = pageranks(G)
+        for k, v in labels.items():
+            labels[k] = round(v, 2)
+    else:
+        labels = dict((n, d['time']) for n, d in G.nodes(data=True))
+    nx.draw(G, labels=labels)
     plt.show()
 
 def graph_centrality(G, type):
@@ -48,7 +54,7 @@ def pageranks(G):
     #     personalization_normal[key] = value/total_count
 
     pageranks = nx.pagerank(G, alpha=0.8)
-    return pageranks
+    return normalize(pageranks)
 
 def degree_centrality(G):
     node_degree_centrality = nx.degree_centrality(G)

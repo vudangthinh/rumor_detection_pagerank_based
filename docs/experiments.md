@@ -46,6 +46,26 @@ Wayback PageRank: Acc: 0.782 P: 0.702 R: 0.614 F1: 0.644 (word vectors)
 Wayback PageRank: Acc: Acc: 0.780 P: 0.700 R: 0.614 F1: 0.643 (content features)
 Wayback PageRank: Acc: 0.779 P: 0.698 R: 0.607 F1: 0.639 (content and social features)
 
+Pagerank 50: Acc: 0.688 P: 0.623 R: 0.460 F1: 0.450
+Pagerank 100: Acc: 0.743 P: 0.627 R: 0.574 F1: 0.587
+Pagerank 500: Acc: 0.773 P: 0.687 R: 0.606 F1: 0.636
+Pagerank 1000: Acc: 0.763 P: 0.673 R: 0.610 F1: 0.625
+Pagerank 10000: Acc: 0.763 P: 0.665 R: 0.638 F1: 0.632
+
+Time 50: Acc: 0.686 P: 0.623 R: 0.444 F1: 0.440
+Time 100: Acc: 0.724 P: 0.615 R: 0.547 F1: 0.553
+Time 500: Acc: 0.775 P: 0.690 R: 0.623 F1: 0.643
+Time 1000: Acc: 0.766 P: 0.675 R: 0.609 F1: 0.627
+Time 10000: Acc: 0.770 P: 0.670 R: 0.636 F1: 0.639
+
+Wayback PageRank 50: Acc: 0.678 P: 0.578 R: 0.478 F1: 0.457
+Wayback PageRank 100: Acc: 0.724 P: 0.566 R: 0.611 F1: 0.579
+Wayback PageRank 500: Acc: 0.769 P: 0.680 R: 0.598 F1: 0.629
+Wayback PageRank 1000: Acc: 0.759 P: 0.664 R: 0.603 F1: 0.619
+Wayback PageRank 10000: Acc: 0.767 P: 0.672 R: 0.637 F1: 0.637
+
+
+
 
 
 Centrality | Accuracy | Precision | Recall | F1

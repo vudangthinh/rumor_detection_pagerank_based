@@ -10,8 +10,9 @@ import math
 from nltk.tag.stanford import StanfordPOSTagger
 
 text_processor = text_utils.create_text_processor()
-TIME_TO_ROOT = True
-ONE_DIRECT = True
+TIME_TO_ROOT = False
+ONE_DIRECT = False
+# root_time = 0
 # tweet_pos_tag_dict = text_utils.load_pos_tag('../../../data/interim/tweet_stanford_pos_tag.txt')
 
 def load_data(data_path, data_version):
@@ -67,12 +68,21 @@ def process_tweet(tweet_dir, key, is_root, source, source_time, source_id, DG):
             file_path = join(tweet_dir, 'source-tweets', key + '.json')
             tokens, more_features, time_dif, source_time = parse_tweet(key, file_path, True, source_time)
             DG.add_node(key, content=tokens, more_features=more_features, time=0)
+            # global root_time
+            # root_time = source_time
         else:
             file_path = join(tweet_dir, 'reactions', key + '.json')
             if TIME_TO_ROOT:
                 tokens, more_features, time_dif, _ = parse_tweet(key, file_path, source, source_time) # two time delay calculation method
             else:
                 tokens, more_features, time_dif, source_time = parse_tweet(key, file_path, source, source_time) # two time delay calculation method
+
+            # if TIME_TO_ROOT and ONE_DIRECT:
+            #     time_range = source_time - root_time
+            # else:
+            #     time_range = time_dif
+            #
+            # if time_range <= 10000:
             DG.add_node(key, content=tokens, more_features=more_features, time=time_dif)
             if ONE_DIRECT:
                 DG.add_edge(key, source_id)

@@ -37,11 +37,13 @@ Harmonic: Acc: 0.775 P: 0.694 R: 0.613 F1: 0.633
 Second order centrality: Acc: 0.725 P: 0.634 R: 0.421 F1: 0.501 
  
 Time reduce (log e): Acc: 0.779 P: 0.699 R: 0.607 F1: 0.640
+Time reduce (log e): Acc: 0.779 P: 0.701 R: 0.596 F1: 0.635
 Time reduce (log e): Acc: 0.781 P: 0.706 R: 0.601 F1: 0.641 (content and social features)
 Time reduce (log 2): Acc: 0.781 P: 0.702 R: 0.611 F1: 0.641
 
 Wayback PageRank (Weight back = 0.2): Acc: 0.779 P: 0.694 R: 0.619 F1: 0.643
-Wayback PageRank: Acc: 0.782 P: 0.702 R: 0.614 F1: 0.644
+Wayback PageRank: Acc: 0.782 P: 0.702 R: 0.614 F1: 0.644 (word vectors)
+Wayback PageRank: Acc: Acc: 0.780 P: 0.700 R: 0.614 F1: 0.643 (content features)
 Wayback PageRank: Acc: 0.779 P: 0.698 R: 0.607 F1: 0.639 (content and social features)
 
 

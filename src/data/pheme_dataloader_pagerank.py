@@ -10,6 +10,8 @@ import math
 from nltk.tag.stanford import StanfordPOSTagger
 
 text_processor = text_utils.create_text_processor()
+TIME_TO_ROOT = True
+ONE_DIRECT = True
 # tweet_pos_tag_dict = text_utils.load_pos_tag('../../../data/interim/tweet_stanford_pos_tag.txt')
 
 def load_data(data_path, data_version):
@@ -67,12 +69,18 @@ def process_tweet(tweet_dir, key, is_root, source, source_time, source_id, DG):
             DG.add_node(key, content=tokens, more_features=more_features, time=0)
         else:
             file_path = join(tweet_dir, 'reactions', key + '.json')
-            tokens, more_features, time_dif, source_time = parse_tweet(key, file_path, source, source_time)
+            if TIME_TO_ROOT:
+                tokens, more_features, time_dif, _ = parse_tweet(key, file_path, source, source_time) # two time delay calculation method
+            else:
+                tokens, more_features, time_dif, source_time = parse_tweet(key, file_path, source, source_time) # two time delay calculation method
             DG.add_node(key, content=tokens, more_features=more_features, time=time_dif)
-            # DG.add_edge(key, source_id)
-            if time_dif < math.e:
-                time_dif = math.e
-            DG.add_weighted_edges_from([(key, source_id, 1.0), (source_id, key, 1 / math.log(time_dif))])
+            if ONE_DIRECT:
+                DG.add_edge(key, source_id)
+            else:
+                if time_dif < math.e:
+                    time_dif = math.e
+
+                DG.add_weighted_edges_from([(key, source_id, 1.0), (source_id, key, 1 / math.log(time_dif))])
     except FileNotFoundError as fnf_error:
         print(fnf_error)
 
@@ -111,7 +119,8 @@ def parse_tweet(tweet_id, file_path, is_source, source_time):
         timestamp = date_time_utils.convert_string_timestamp(created_at)
         time_dif = timestamp - source_time
 
-        return tokens, np.concatenate((content_features, social_features)), time_dif, timestamp #np.concatenate((content_features, social_features))
+        extra_features = content_features #np.concatenate((content_features, social_features))
+        return tokens, extra_features, time_dif, timestamp #np.concatenate((content_features, social_features))
 
 def text_process(s):
     tokens = text_utils.process(text_processor, s)

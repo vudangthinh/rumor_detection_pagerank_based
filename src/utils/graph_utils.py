@@ -35,6 +35,8 @@ def graph_centrality(G, type):
         return percolation_centrality(G)
     elif type == 'time':
         return time_centrality(G)
+    elif type == 'level':
+        return level_centrality(G)
 
 def average_centrality(G):
     centrality = {}
@@ -88,6 +90,13 @@ def time_centrality(G):
             centrality[node_name] = 1
         else:
             centrality[node_name] = 1/math.log(node_content['time'])
+
+    return normalize(centrality)
+
+def level_centrality(G):
+    centrality = {}
+    for node_name, node_content in G.nodes(data=True):
+        centrality[node_name] = 1/node_content['level']
 
     return normalize(centrality)
 

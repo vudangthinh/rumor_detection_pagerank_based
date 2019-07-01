@@ -67,7 +67,7 @@ def process_tweet(tweet_dir, key, is_root, source, source_time, source_id, DG):
         if is_root:
             file_path = join(tweet_dir, 'source-tweets', key + '.json')
             tokens, more_features, time_dif, source_time = parse_tweet(key, file_path, True, source_time)
-            DG.add_node(key, content=tokens, more_features=more_features, time=0)
+            DG.add_node(key, content=tokens, more_features=more_features, time=0, level=1)
             # global root_time
             # root_time = source_time
         else:
@@ -83,7 +83,8 @@ def process_tweet(tweet_dir, key, is_root, source, source_time, source_id, DG):
             #     time_range = time_dif
             #
             # if time_range <= 10000:
-            DG.add_node(key, content=tokens, more_features=more_features, time=time_dif)
+
+            DG.add_node(key, content=tokens, more_features=more_features, time=time_dif, level=DG.nodes[source_id]['level'] + 1)
             if ONE_DIRECT:
                 DG.add_edge(key, source_id)
             else:

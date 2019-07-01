@@ -167,7 +167,6 @@ def get_graph_vector(graph, tfidf, w2v, embed_model):
         if feature_type != 'wordvector':
             more_features = graph.nodes[node]['more_features']
 
-
         if w2v:
             token_vector = np.zeros((embed_model.vector_size,))
             for token in tokens:

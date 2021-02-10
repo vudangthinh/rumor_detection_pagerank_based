@@ -2,10 +2,9 @@ from os import listdir
 from os.path import isdir, join
 import json
 import networkx as nx
-from src.utils import text_utils, date_time_utils, graph_utils
+from src.utils import text_utils, date_time_utils
 import numpy as np
 from nltk.util import ngrams
-from src.utils import config
 import math
 from nltk.tag.stanford import StanfordPOSTagger
 

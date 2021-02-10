@@ -101,11 +101,11 @@ def load_pos_tag(pos_tag_file):
 
     return tweet_pos_tag_dict
 
-if __name__ == '__main__':
-    text = '#WakeUpAmerica \nCo-pilot was a Muslim Convert \nhttp:\/\/t.co\/RYFQTVBYBL\n@seanhannity @greta @act4america \n@KrisParonto @JGilliam_SEAL Feb 18th'
-    text = 'BREAKING: German Media Site   Says \tGermanwings Co-Pilot Was Muslim Convert http:\/\/t.co\/bTKvcLMN60 via @anyclinic'
-    tokens = process(text)
-    print(tokens)
+# if __name__ == '__main__':
+#     text = '#WakeUpAmerica \nCo-pilot was a Muslim Convert \nhttp:\/\/t.co\/RYFQTVBYBL\n@seanhannity @greta @act4america \n@KrisParonto @JGilliam_SEAL Feb 18th'
+#     text = 'BREAKING: German Media Site   Says \tGermanwings Co-Pilot Was Muslim Convert http:\/\/t.co\/bTKvcLMN60 via @anyclinic'
+#     tokens = process(text)
+#     print(tokens)
 
-    print(convert_ngram(tokens, 1))
-    print(convert_ngram(tokens, 2))
+#     print(convert_ngram(tokens, 1))
+#     print(convert_ngram(tokens, 2))
